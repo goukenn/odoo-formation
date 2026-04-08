@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>25-Day Technical Interview Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #161920;
+    --surface2: #1e2230;
+    --border: #2a2f42;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --easy: #10b981;
+    --medium: #f59e0b;
+    --hard: #ef4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d0f14 0%, #161b2e 50%, #0d0f14 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 20%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  h1 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+  }
+  h1 span { color: var(--accent); }
+  .header-sub {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+  .stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+  }
+  .stat-val {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  /* FILTERS */
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .filter-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,0.06);
+  }
+  .filter-btn[data-cat="oop"].active { border-color: var(--accent2); color: var(--accent2); background: rgba(124,58,237,0.08); }
+  .filter-btn[data-cat="sql"].active { border-color: var(--accent3); color: var(--accent3); background: rgba(245,158,11,0.08); }
+  .filter-btn[data-cat="git"].active { border-color: var(--green); color: var(--green); background: rgba(16,185,129,0.08); }
+
+  /* DAY BLOCK */
+  .day-block {
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--surface);
+    transition: border-color 0.2s;
+  }
+  .day-block:hover { border-color: var(--border); }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface2);
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .day-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+    min-width: 60px;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+  .day-number.oop { background: var(--accent2); }
+  .day-number.sql { background: var(--accent3); color: #0d0f14; }
+  .day-number.git { background: var(--green); color: #0d0f14; }
+  .day-number.project { background: var(--red); }
+
+  .day-title { font-size: 1rem; font-weight: 600; flex: 1; }
+  .day-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  .chevron {
+    color: var(--muted);
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+  }
+  .day-block.open .chevron { transform: rotate(180deg); }
+
+  .day-content { display: none; padding: 1.25rem; }
+  .day-block.open .day-content { display: block; }
+
+  .day-objective {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+    padding: 0.75rem 1rem;
+    background: rgba(255,255,255,0.02);
+    border-left: 3px solid var(--accent);
+    margin-bottom: 1.25rem;
+    border-radius: 0 4px 4px 0;
+  }
+  .day-objective.oop { border-left-color: var(--accent2); }
+  .day-objective.sql { border-left-color: var(--accent3); }
+  .day-objective.git { border-left-color: var(--green); }
+
+  /* EXERCISE CARD */
+  .exercise {
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .exercise:last-child { margin-bottom: 0; }
+
+  .ex-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255,255,255,0.025);
+    cursor: pointer;
+    user-select: none;
+  }
+  .ex-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    min-width: 28px;
+  }
+  .ex-title { font-size: 0.9rem; font-weight: 600; flex: 1; }
+  .difficulty {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .easy { background: rgba(16,185,129,0.15); color: var(--easy); border: 1px solid rgba(16,185,129,0.3); }
+  .medium { background: rgba(245,158,11,0.15); color: var(--medium); border: 1px solid rgba(245,158,11,0.3); }
+  .hard { background: rgba(239,68,68,0.15); color: var(--hard); border: 1px solid rgba(239,68,68,0.3); }
+
+  .ex-body {
+    display: none;
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .exercise.open .ex-body { display: block; }
+
+  .ex-desc {
+    font-size: 0.875rem;
+    line-height: 1.75;
+    color: #c8d3e6;
+    margin-bottom: 1rem;
+  }
+
+  .ex-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+    margin-top: 0.9rem;
+  }
+
+  pre, code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+  }
+  pre {
+    background: #0a0c12;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    overflow-x: auto;
+    line-height: 1.6;
+    color: #a8c0e8;
+  }
+  code {
+    background: rgba(0,229,255,0.08);
+    color: var(--accent);
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.82em;
+  }
+
+  .hint {
+    background: rgba(124,58,237,0.07);
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 4px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.8rem;
+    color: #a78bfa;
+    margin-top: 0.9rem;
+  }
+  .hint::before { content: '💡 Hint: '; font-weight: 700; }
+
+  .complexity {
+    display: inline-flex;
+    gap: 1rem;
+    margin-top: 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+  }
+  .complexity span {
+    background: rgba(0,229,255,0.06);
+    border: 1px solid rgba(0,229,255,0.15);
+    color: var(--accent);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-section {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .day-pip {
+    width: 28px; height: 28px;
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: var(--surface);
+  }
+  .day-pip:hover { transform: translateY(-2px); }
+  .day-pip.python { background: rgba(0,229,255,0.12); color: var(--accent); border-color: rgba(0,229,255,0.3); }
+  .day-pip.oop { background: rgba(124,58,237,0.12); color: var(--accent2); border-color: rgba(124,58,237,0.3); }
+  .day-pip.sql { background: rgba(245,158,11,0.12); color: var(--accent3); border-color: rgba(245,158,11,0.3); }
+  .day-pip.git { background: rgba(16,185,129,0.12); color: var(--green); border-color: rgba(16,185,129,0.3); }
+  .day-pip.project { background: rgba(239,68,68,0.12); color: var(--red); border-color: rgba(239,68,68,0.3); }
+
+  .legend {
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-tag">// Coderbyte Prep Program</div>
+    <h1>25-Day <span>Technical</span> Interview Prep</h1>
+    <p class="header-sub">A complete exercise program covering Python algorithms, OOP, SQL, and engineering best practices — designed to build Coderbyte-level problem-solving skills.</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-val">25</span><span class="stat-label">Days</span></div>
+      <div class="stat"><span class="stat-val">72</span><span class="stat-label">Exercises</span></div>
+      <div class="stat"><span class="stat-val">4</span><span class="stat-label">Modules</span></div>
+      <div class="stat"><span class="stat-val">EN</span><span class="stat-label">Language</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- LEGEND & PROGRESS -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#00e5ff"></div> Python / Algo (Days 1–8)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> OOP (Days 9–14)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> SQL (Days 15–18)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div> Git / Debug / Practices (Days 19–21)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> Final Project (Days 22–25)</div>
+  </div>
+
+  <div class="progress-section" id="pips"></div>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <button class="filter-btn active" data-cat="all">All Days</button>
+    <button class="filter-btn" data-cat="python">Python & Algo</button>
+    <button class="filter-btn" data-cat="oop">OOP</button>
+    <button class="filter-btn" data-cat="sql">SQL</button>
+    <button class="filter-btn" data-cat="git">Git & Debug</button>
+    <button class="filter-btn" data-cat="project">Final Project</button>
+  </div>
+
+  <!-- =================== DAY BLOCKS =================== -->
+  <div id="days-container"></div>
+
+</div>
+
+<footer>Generated for Coderbyte Technical Interview Preparation · 25 Days · Python · OOP · SQL</footer>
+
+<script>
+const days = [
+  // ===================== PYTHON & ALGO =====================
+  {
+    day: 1, cat: "python",
+    title: "Python Basics — Strings & Lists",
+    objective: "Warm up with core Python syntax. Manipulate strings and lists confidently and understand basic iteration and slicing.",
+    exercises: [
+      {
+        title: "Reverse Words",
+        difficulty: "easy",
+        desc: `Write a function <code>reverse_words(sentence)</code> that takes a sentence as input and returns it with the word order reversed. Words are separated by a single space. Do not use any reverse-specific built-in that operates on the full string directly — use only string splitting and joining.`,
+        examples: `Input:  "Hello World Python"\nOutput: "Python World Hello"\n\nInput:  "I love coding"\nOutput: "coding love I"`,
+        hint: "Split into a list of words, reverse the list, then re-join.",
+        time: "O(n)", space: "O(n)"
+      },
+      {
+        title: "Caesar Cipher",
+        difficulty: "easy",
+        desc: `Implement <code>caesar_cipher(text, shift)</code> that encodes a string by shifting each letter by <code>shift</code> positions in the alphabet. Non-alphabetic characters are left unchanged. The cipher wraps around: 'z' shifted by 1 becomes 'a'. Preserve the case of each letter.`,
+        examples: `Input:  "Hello, World!", 3\nOutput: "Khoor, Zruog!"\n\nInput:  "xyz", 2\nOutput: "zab"`,
+        hint: "Use ord() and chr(). Handle upper and lower case separately. Use modulo 26 for wrap-around.",
+        time: "O(n)", space: "O(n)"
+      },
+      {
+        title: "Longest Word",
+        difficulty: "easy",
+        desc: `Write <code>longest_word(sentence)</code> that returns the longest word in a sentence. If there are multiple words of the same maximum length, return the first one encountered. Strip punctuation from words before comparing.`,
+        examples: `Input:  "The quick brown fox"\nOutput: "quick"\n\nInput:  "I love Python!"\nOutput: "Python"`,
+        hint: "Split the sentence, strip punctuation using str.strip('.,!?'), then track the max by length.",
+        time: "O(n)", space: "O(n)"
+      },
+      {
+        title: "Run-Length Encoding",
+        difficulty: "medium",
+        desc: `Implement <code>run_length_encode(s)</code> that compresses a string using run-length encoding. Consecutive duplicate characters are replaced with the character followed by the count. If a character appears only once, write it without a number.`,
+        examples: `Input:  "aaabbbccddddee"\nOutput: "a3b3c2d4e2"\n\nInput:  "abcde"\nOutput: "abcde"\n\nInput:  "aaaa"\nOutput: "a4"`,
+        hint: "Iterate through the string tracking the current character and its count. When the character changes, flush the result.",
+        time: "O(n)", space: "O(n)"
+      }
+    ]
+  },
+
+  {
+    day: 2, cat: "python",
+    title: "Functions, Recursion & Higher-Order Functions",
+    objective: "Understand how to write clean reusable functions, use recursion correctly, and leverage Python's functional tools (map, filter, reduce, lambdas).",
+    exercises: [
+      {
+        title: "Fibonacci — Iterative vs Recursive",
+        difficulty: "easy",
+        desc: `Write two functions: <code>fib_recursive(n)</code> and <code>fib_iterative(n)</code>, both returning the nth Fibonacci number (0-indexed: fib(0)=0, fib(1)=1). Then write a third version <code>fib_memo(n)</code> using memoization. Compare their performance for large values of n (e.g. n=35).`,
+        examples: `fib_recursive(7)  → 13\nfib_iterative(7)  → 13\nfib_memo(50)      → 12586269025  # fast!`,
+        hint: "Use a dictionary or functools.lru_cache for the memoized version.",
+        time: "O(n) for iterative/memo, O(2^n) for naive recursive", space: "O(n)"
+      },
+      {
+        title: "Flatten Nested List",
+        difficulty: "medium",
+        desc: `Write a recursive function <code>flatten(lst)</code> that takes an arbitrarily nested list and returns a flat list of all values in order. The list can contain integers, strings, or other nested lists at any depth.`,
+        examples: `Input:  [1, [2, [3, 4], 5], [6, 7]]\nOutput: [1, 2, 3, 4, 5, 6, 7]\n\nInput:  [[1, 2], [[3], [4, [5]]]]\nOutput: [1, 2, 3, 4, 5]`,
+        hint: "Check isinstance(item, list) and recurse if so, otherwise just append the item.",
+        time: "O(n)", space: "O(depth)"
+      },
+      {
+        title: "Pipeline with Higher-Order Functions",
+        difficulty: "medium",
+        desc: `Given a list of strings representing product entries like <code>"apple:1.50:fruit"</code>, write a function <code>process_products(entries)</code> that uses <code>map</code>, <code>filter</code>, and <code>sorted</code> (with lambda) to: (1) parse each entry into a dict with keys name, price, category, (2) keep only items with price < 2.0, (3) return them sorted by price ascending.`,
+        examples: `Input:  ["apple:1.50:fruit", "steak:8.00:meat", "banana:0.99:fruit", "milk:1.80:dairy"]\nOutput: [\n  {"name":"banana","price":0.99,"category":"fruit"},\n  {"name":"apple","price":1.50,"category":"fruit"},\n  {"name":"milk","price":1.80,"category":"dairy"}\n]`,
+        hint: "Use map() to parse, filter() to reduce, sorted() with key=lambda x: x['price'].",
+        time: "O(n log n)", space: "O(n)"
+      }
+    ]
+  },
+
+  {
+    day: 3, cat: "python",
+    title: "Data Structures — dict, set, tuple",
+    objective: "Master Python's built-in data structures and know when to use each. Solve classic frequency, uniqueness, and grouping problems efficiently.",
+    exercises: [
+      {
+        title: "Two Sum",
+        difficulty: "easy",
+        desc: `Write <code>two_sum(nums, target)</code> that returns the indices of the two numbers that add up to the target. You may assume exactly one solution exists. Each input element can only be used once. Your solution must run in O(n) time — a brute-force O(n²) solution is not acceptable.`,
+        examples: `Input:  [2, 7, 11, 15], target=9\nOutput: [0, 1]  # nums[0]+nums[1] = 2+7 = 9\n\nInput:  [3, 2, 4], target=6\nOutput: [1, 2]`,
+        hint: "Use a dictionary to store each number's index as you iterate. For each element, check if (target - element) is already in the dict.",
+        time: "O(n)", space: "O(n)"
+      },
+      {
+        title: "Word Frequency Counter",
+        difficulty: "easy",
+        desc: `Write <code>word_frequency(text)</code> that returns a dictionary with each word as a key and its occurrence count as the value. Ignore case and strip punctuation. Then write <code>top_n_words(text, n)</code> that returns the top n most frequent words as a list of (word, count) tuples.`,
+        examples: `text = "the cat sat on the mat the cat"\nword_frequency(text) → {"the": 3, "cat": 2, "sat": 1, "on": 1, "mat": 1}\ntop_n_words(text, 2)  → [("the", 3), ("cat", 2)]`,
+        hint: "Use collections.Counter for a one-liner approach, or build the dict manually. Use Counter.most_common(n) for top_n.",
+        time: "O(n)", space: "O(k)"
+      },
+      {
+        title: "Group Anagrams",
+        difficulty: "medium",
+        desc: `Write <code>group_anagrams(words)</code> that groups a list of words into sublists where all words in each group are anagrams of each other. The order of groups and words within groups does not matter.`,
+        examples: `Input:  ["eat","tea","tan","ate","nat","bat"]\nOutput: [["eat","tea","ate"], ["tan","nat"], ["bat"]]`,
+        hint: "For each word, sort its characters to create a canonical key. Use a dict mapping this key to a list of words.",
+        time: "O(n * k log k)", space: "O(n*k)"
+      },
+      {
+        title: "Longest Consecutive Sequence",
+        difficulty: "medium",
+        desc: `Write <code>longest_consecutive(nums)</code> that finds the length of the longest consecutive integer sequence in an unsorted list. Your algorithm must run in O(n) time — do NOT sort the list.`,
+        examples: `Input:  [100, 4, 200, 1, 3, 2]\nOutput: 4  # sequence: [1, 2, 3, 4]\n\nInput:  [0, 3, 7, 2, 5, 8, 4, 6, 0, 1]\nOutput: 9`,
+        hint: "Convert the list to a set. For each number that has no predecessor (n-1 not in set), expand the sequence forward and count.",
+        time: "O(n)", space: "O(n)"
+      }
+    ]
+  },
+
+  {
+    day: 4, cat: "python",
+    title: "Sorting Algorithms & Binary Search",
+    objective: "Understand and implement fundamental sorting algorithms from scratch. Solve search problems efficiently using binary search.",
+    exercises: [
+      {
+        title: "Implement Merge Sort",
+        difficulty: "medium",
+        desc: `Implement the merge sort algorithm from scratch as <code>merge_sort(arr)</code>. Do NOT use Python's built-in sort. Your implementation must be divide-and-conquer: split the array in half, recursively sort each half, then merge the two sorted halves. Return the sorted array.`,
+        examples: `Input:  [38, 27, 43, 3, 9, 82, 10]\nOutput: [3, 9, 10, 27, 38, 43, 82]`,
+        hint: "Write a helper merge(left, right) function that merges two sorted lists. Then recursively call merge_sort on each half.",
+        time: "O(n log n)", space: "O(n)"
+      },
+      {
+        title: "Binary Search — Variants",
+        difficulty: "medium",
+        desc: `Implement three variants of binary search on a sorted array:\n\n1. <code>binary_search(arr, target)</code> — return the index of target, or -1 if not found.\n2. <code>search_first(arr, target)</code> — return the index of the FIRST occurrence of target.\n3. <code>search_insert(arr, target)</code> — return the index where target should be inserted to keep the array sorted.`,
+        examples: `arr = [1, 2, 2, 2, 5, 7, 9]\nbinary_search(arr, 2)   → 2  (or 1 or 3 — any valid index)\nsearch_first(arr, 2)    → 1  (leftmost occurrence)\nsearch_insert(arr, 4)   → 4  (position to insert 4)`,
+        hint: "For search_first, when you find the target, don't stop — set right = mid - 1 and keep going left. For search_insert, the answer is the final value of 'left' when the loop ends.",
+        time: "O(log n)", space: "O(1)"
+      },
+      {
+        title: "Find K Closest Elements",
+        difficulty: "medium",
+        desc: `Write <code>k_closest(arr, k, x)</code> that, given a sorted array, finds the k closest elements to value x. Return them as a sorted list. If two elements are equidistant from x, prefer the smaller one.`,
+        examples: `Input:  arr=[1,2,3,4,5], k=4, x=3\nOutput: [1,2,3,4]\n\nInput:  arr=[1,2,3,4,5], k=4, x=-1\nOutput: [1,2,3,4]`,
+        hint: "Use binary search to find the window start position, then use two pointers to expand the window of size k around x.",
+        time: "O(log n + k)", space: "O(k)"
+      }
+    ]
+  },
+
+  {
+    day: 5, cat: "python",
+    title: "Stacks, Queues & Sliding Window",
+    objective: "Use stack and queue patterns to solve bracket/monotone problems. Master the sliding window technique for substring/subarray problems.",
+    exercises: [
+      {
+        title: "Valid Parentheses",
+        difficulty: "easy",
+        desc: `Write <code>is_valid(s)</code> that determines if a string of brackets is valid. A string is valid if every opening bracket has a matching closing bracket in the correct order. Supported bracket pairs: <code>()</code>, <code>[]</code>, <code>{}</code>.`,
+        examples: `Input:  "()[]{}"  → True\nInput:  "([)]"   → False\nInput:  "{[]}"   → True\nInput:  "((("    → False`,
+        hint: "Use a stack. Push opening brackets. When you see a closing bracket, check if the top of the stack is the matching opener.",
+        time: "O(n)", space: "O(n)"
+      },
+      {
+        title: "Longest Substring Without Repeating Characters",
+        difficulty: "medium",
+        desc: `Write <code>length_of_longest_substring(s)</code> that returns the length of the longest substring of s with all unique characters.`,
+        examples: `Input:  "abcabcbb"  → 3  # "abc"\nInput:  "bbbbb"     → 1  # "b"\nInput:  "pwwkew"    → 3  # "wke"`,
+        hint: "Use a sliding window with a set. Expand right pointer by adding s[right] to the set. When a duplicate is found, shrink from the left until the duplicate is removed.",
+        time: "O(n)", space: "O(min(n,m))"
+      },
+      {
+        title: "Maximum Sum Subarray of Size K",
+        difficulty: "easy",
+        desc: `Write <code>max_sum_subarray(arr, k)</code> that finds the maximum sum of any contiguous subarray of size k.`,
+        examples: `Input:  [2,1,5,1,3,2], k=3  → 9  # subarray [5,1,3]\nInput:  [2,3,4,1,5], k=2    → 7  # subarray [3,4]`,
+        hint: "Compute the sum of the first window, then slide: add the new right element and remove the leftmost element.",
+        time: "O(n)", space: "O(1)"
+      },
+      {
+        title: "Daily Temperatures",
+        difficulty: "medium",
+        desc: `Write <code>daily_temperatures(temps)</code> that, given a list of daily temperatures, returns a list where each element i contains the number of days you would have to wait until a warmer temperature. If there is no future warmer day, put 0.`,
+        examples: `Input:  [73,74,75,71,69,72,76,73]\nOutput: [1,1,4,2,1,1,0,0]`,
+        hint: "Use a monotonic decreasing stack of indices. When you find a temperature warmer than the stack's top, pop and record the distance.",
+        time: "O(n)", space: "O(n)"
+      }
+    ]
+  },
+
+  {
+    day: 6, cat: "python",
+    title: "Big O Analysis & Optimization",
+    objective: "Identify the time/space complexity of existing solutions. Rewrite O(n²) solutions as O(n) or O(n log n) using appropriate data structures.",
+    exercises: [
+      {
+        title: "Optimize: Find All Duplicates",
+        difficulty: "medium",
+        desc: `You are given a naive O(n²) solution to find duplicates:\n\n<pre>def find_duplicates_slow(arr):\n    dupes = []\n    for i in range(len(arr)):\n        for j in range(i+1, len(arr)):\n            if arr[i] == arr[j] and arr[i] not in dupes:\n                dupes.append(arr[i])\n    return dupes</pre>\n\nRewrite <code>find_duplicates_fast(arr)</code> to solve the same problem in O(n) time and O(n) space. Then analyze the trade-off between time and space.`,
+        examples: `Input:  [4,3,2,7,8,2,3,1]\nOutput: [2, 3]`,
+        hint: "Use a set to track seen elements. If an element is already in the set, it's a duplicate.",
+        time: "O(n)", space: "O(n)"
+      },
+      {
+        title: "Complexity Analysis Quiz",
+        difficulty: "easy",
+        desc: `For each of the following code snippets, determine the time complexity and briefly justify your answer. Write your analysis as comments in a Python file.\n\nSnippet A: A loop 1 to n containing a binary search call.\nSnippet B: Two nested loops where the inner loop goes from i to n.\nSnippet C: A recursive function that halves the input and makes 2 recursive calls.\nSnippet D: A loop to n inside which you call list.sort() on a list of size n.\nSnippet E: A function that checks if all elements in a list are unique using a set.`,
+        examples: `# Example:\n# for i in range(n):     → The outer loop is O(n)\n#     arr.sort()          → sort is O(n log n)\n# Total: O(n² log n)`,
+        hint: "Focus on: how many iterations does each loop do? What is the cost of each operation inside the loop?",
+        time: "N/A — analysis exercise", space: ""
+      },
+      {
+        title: "Top K Frequent Elements",
+        difficulty: "medium",
+        desc: `Write <code>top_k_frequent(nums, k)</code> that returns the k most frequent elements. The answer can be in any order. Your solution must be better than O(n log n) overall — use a bucket sort approach.`,
+        examples: `Input:  [1,1,1,2,2,3], k=2  → [1,2]\nInput:  [1], k=1            → [1]`,
+        hint: "Count frequencies with a dict. Then create an array of buckets indexed by frequency (max frequency = n). Collect results from highest frequency buckets down.",
+        time: "O(n)", space: "O(n)"
+      }
+    ]
+  },
+
+  {
+    day: 7, cat: "python",
+    title: "Mixed Algorithms — Easy to Medium",
+    objective: "Practice a variety of algorithmic problems to consolidate your skills. These problems reflect the type of questions you will encounter on Coderbyte.",
+    exercises: [
+      {
+        title: "Matrix Spiral Traversal",
+        difficulty: "medium",
+        desc: `Write <code>spiral_order(matrix)</code> that returns all elements of an m×n matrix in spiral order (clockwise, starting from top-left).`,
+        examples: `Input:  [[1,2,3],[4,5,6],[7,8,9]]\nOutput: [1,2,3,6,9,8,7,4,5]\n\nInput:  [[1,2,3,4],[5,6,7,8],[9,10,11,12]]\nOutput: [1,2,3,4,8,12,11,10,9,5,6,7]`,
+        hint: "Maintain four boundaries: top, bottom, left, right. Traverse the four sides in order, shrink the boundary after each side.",
+        time: "O(m*n)", space: "O(m*n)"
+      },
+      {
+        title: "Merge Intervals",
+        difficulty: "medium",
+        desc: `Write <code>merge_intervals(intervals)</code> that, given a list of intervals <code>[start, end]</code>, merges all overlapping intervals and returns the result sorted.`,
+        examples: `Input:  [[1,3],[2,6],[8,10],[15,18]]\nOutput: [[1,6],[8,10],[15,18]]\n\nInput:  [[1,4],[4,5]]\nOutput: [[1,5]]`,
+        hint: "Sort by start time. Iterate through — if the current interval's start is ≤ the last merged interval's end, merge them by updating the end.",
+        time: "O(n log n)", space: "O(n)"
+      },
+      {
+        title: "Coin Change — Minimum Coins",
+        difficulty: "medium",
+        desc: `Write <code>coin_change(coins, amount)</code> that returns the fewest number of coins needed to make up the given amount. If the amount cannot be made up, return -1.`,
+        examples: `Input:  coins=[1,5,11], amount=15\nOutput: 3  # 5+5+5\n\nInput:  coins=[2], amount=3\nOutput: -1`,
+        hint: "Use bottom-up dynamic programming. Build a dp array where dp[i] = minimum coins for amount i. Initialize with infinity, dp[0]=0.",
+        time: "O(n*amount)", space: "O(amount)"
+      },
+      {
+        title: "String Compression",
+        difficulty: "easy",
+        desc: `Write <code>compress_string(s)</code> that performs basic string compression using counts of repeated characters. If the compressed string is not smaller than the original, return the original. Only count consecutive repeats.`,
+        examples: `Input:  "aabcccccaaa"  → "a2b1c5a3"\nInput:  "abc"          → "abc"  # same length, return original\nInput:  "aabb"         → "aabb" # "a2b2" not shorter`,
+        hint: "Build the compressed string and compare lengths at the end. This is similar to run-length encoding but with a length check.",
+        time: "O(n)", space: "O(n)"
+      }
+    ]
+  },
+
+  {
+    day: 8, cat: "python",
+    title: "Mixed Algorithms — Medium Challenge Day",
+    objective: "Push your skills further with problems requiring multi-concept thinking. Combine data structures and algorithmic patterns to reach optimal solutions.",
+    exercises: [
+      {
+        title: "LRU Cache",
+        difficulty: "hard",
+        desc: `Design a data structure <code>LRUCache(capacity)</code> that supports: <code>get(key)</code> returning the value (or -1 if absent) and <code>put(key, value)</code> inserting/updating a key. When the cache reaches capacity, evict the least recently used key. Both operations must run in O(1).`,
+        examples: `cache = LRUCache(2)\ncache.put(1, 1)   # cache: {1:1}\ncache.put(2, 2)   # cache: {1:1, 2:2}\ncache.get(1)      # returns 1, marks 1 as most recent\ncache.put(3, 3)   # evicts key 2 (least recent)\ncache.get(2)      # returns -1 (not found)`,
+        hint: "Use Python's OrderedDict. On get/put, move the accessed key to the end (most recent). On overflow, pop from the front (least recent).",
+        time: "O(1) per operation", space: "O(capacity)"
+      },
+      {
+        title: "Word Search in a Grid",
+        difficulty: "hard",
+        desc: `Write <code>word_search(board, word)</code> that returns True if the word exists in a 2D grid of characters. The word can be constructed from sequentially adjacent cells (horizontally or vertically). Each cell may only be used once per search path.`,
+        examples: `board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]\nword_search(board, "ABCCED")  → True\nword_search(board, "SEE")      → True\nword_search(board, "ABCB")     → False`,
+        hint: "Use DFS + backtracking. Mark a cell as visited before recursing, then unmark it afterward. Explore all 4 directions.",
+        time: "O(m*n*4^L) where L is word length", space: "O(L)"
+      },
+      {
+        title: "Product of Array Except Self",
+        difficulty: "medium",
+        desc: `Write <code>product_except_self(nums)</code> that returns an array where each element is the product of all other elements in the input array. You may NOT use division, and the solution must run in O(n) time with O(1) extra space (output array does not count).`,
+        examples: `Input:  [1,2,3,4]    → [24,12,8,6]\nInput:  [-1,1,0,-3,3] → [0,0,9,0,0]`,
+        hint: "Two passes: first compute prefix products left to right, then multiply by suffix products right to left — all in the output array.",
+        time: "O(n)", space: "O(1)"
+      }
+    ]
+  },
+
+  // ===================== OOP =====================
+  {
+    day: 9, cat: "oop",
+    title: "Classes & Objects — Foundations",
+    objective: "Model real-world entities as Python classes. Practice constructors, instance methods, and class attributes.",
+    exercises: [
+      {
+        title: "BankAccount Class",
+        difficulty: "easy",
+        desc: `Implement a <code>BankAccount</code> class with the following features:\n- Constructor: <code>__init__(self, owner, balance=0)</code>\n- Methods: <code>deposit(amount)</code>, <code>withdraw(amount)</code>, <code>get_balance()</code>, <code>transfer(amount, target_account)</code>\n- <code>withdraw</code> should raise a <code>ValueError</code> if the balance would go negative.\n- A class attribute <code>transaction_fee = 1.0</code> is applied to every withdrawal.\n- <code>__str__</code> returns a readable summary.`,
+        examples: `acc1 = BankAccount("Alice", 100)\nacc2 = BankAccount("Bob")\nacc1.deposit(50)     # balance: 150\nacc1.withdraw(20)    # balance: 129 (20 + 1 fee)\nacc1.transfer(50, acc2)\nprint(acc1)  # "BankAccount[Alice]: 78.0 EUR"\nprint(acc2)  # "BankAccount[Bob]: 50.0 EUR"`,
+        hint: "Apply the transaction_fee inside withdraw(). For transfer, call self.withdraw() and target.deposit() — the fee is only charged once.",
+        time: "O(1) per op", space: ""
+      },
+      {
+        title: "Stack Data Structure",
+        difficulty: "easy",
+        desc: `Implement a <code>Stack</code> class from scratch (no import of deque or other containers) backed by a Python list. It must support: <code>push(item)</code>, <code>pop()</code>, <code>peek()</code>, <code>is_empty()</code>, <code>size()</code>. <code>pop()</code> and <code>peek()</code> must raise an <code>IndexError</code> with a meaningful message if the stack is empty. Implement <code>__repr__</code> for debugging.`,
+        examples: `s = Stack()\ns.push(1); s.push(2); s.push(3)\ns.peek()    → 3\ns.pop()     → 3\ns.size()    → 2\ns.is_empty()→ False`,
+        hint: "Use a list internally. push = append to end, pop = remove from end.",
+        time: "O(1) per op", space: ""
+      },
+      {
+        title: "Student Grade Book",
+        difficulty: "medium",
+        desc: `Design a <code>GradeBook</code> class that manages students and their grades:\n- <code>add_student(name)</code>\n- <code>add_grade(student_name, subject, grade)</code>\n- <code>get_average(student_name)</code> — average across all subjects\n- <code>top_student()</code> — returns the name of the student with the highest overall average\n- <code>failing_students(threshold=10.0)</code> — returns names of students below threshold\n- Use a nested dict internally: <code>{student: {subject: grade}}</code>`,
+        examples: `gb = GradeBook()\ngb.add_student("Alice")\ngb.add_grade("Alice","Math",16); gb.add_grade("Alice","Python",18)\ngb.add_student("Bob")\ngb.add_grade("Bob","Math",8); gb.add_grade("Bob","Python",9)\ngb.top_student()          → "Alice"\ngb.failing_students(10)   → ["Bob"]`,
+        hint: "Compute averages with sum(grades.values()) / len(grades.values()). Use max() with key= for top_student.",
+        time: "O(n) per query", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 10, cat: "oop",
+    title: "Encapsulation & Properties",
+    objective: "Use Python's property decorator to enforce invariants, validate data on assignment, and hide implementation details behind a clean interface.",
+    exercises: [
+      {
+        title: "Temperature Converter",
+        difficulty: "easy",
+        desc: `Create a <code>Temperature</code> class where the internal value is stored in Celsius. Expose three properties: <code>celsius</code>, <code>fahrenheit</code>, <code>kelvin</code> — each with a getter AND setter. Setting any one property updates the internal Celsius storage. Setting a temperature below absolute zero (-273.15°C) must raise a <code>ValueError</code>.`,
+        examples: `t = Temperature(100)  # 100°C\nt.fahrenheit  → 212.0\nt.kelvin      → 373.15\nt.fahrenheit = 32  # sets to 0°C\nt.celsius     → 0.0\nt.kelvin = 0  # raises ValueError`,
+        hint: "Store only _celsius internally. Setters for fahrenheit and kelvin should convert back to Celsius before storing.",
+        time: "O(1)", space: ""
+      },
+      {
+        title: "Validated Person",
+        difficulty: "medium",
+        desc: `Create a <code>Person</code> class with validated properties:\n- <code>name</code>: must be a non-empty string, stored as title-case\n- <code>age</code>: must be integer between 0 and 150\n- <code>email</code>: must contain exactly one '@' and at least one '.' after it\n- <code>salary</code>: must be a positive float, with a class-level minimum wage of 1500.0\n\nAll validations should raise <code>ValueError</code> with a descriptive message on invalid input.`,
+        examples: `p = Person("alice", 30, "alice@example.com", 2500.0)\np.name     → "Alice"\np.age = -1  # raises ValueError: "Age must be between 0 and 150"\np.email = "notanemail"  # raises ValueError`,
+        hint: "Use @property and @xxx.setter decorators. For email, check '@' in value and '.' in value.split('@')[1].",
+        time: "O(1)", space: ""
+      },
+      {
+        title: "Inventory Item with History",
+        difficulty: "medium",
+        desc: `Build an <code>InventoryItem</code> class representing a warehouse item with:\n- <code>name</code>: read-only after initialization\n- <code>quantity</code>: settable, must be ≥ 0\n- <code>price</code>: settable, must be > 0.0\n- <code>total_value</code>: computed read-only property (quantity × price)\n- A private list <code>_history</code> that records every change as a tuple <code>(field, old_value, new_value)</code>\n- <code>get_history()</code> returns the full change log`,
+        examples: `item = InventoryItem("Widget", 100, 2.50)\nitem.quantity = 120  # logs ("quantity", 100, 120)\nitem.price = 3.00    # logs ("price", 2.50, 3.00)\nitem.total_value     → 360.0\nitem.get_history()   → [("quantity",100,120), ("price",2.50,3.00)]`,
+        hint: "In each setter, read the current value, update it, then append the change to _history.",
+        time: "O(1) per op", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 11, cat: "oop",
+    title: "Inheritance & Polymorphism",
+    objective: "Model hierarchical relationships using inheritance. Override methods and use polymorphism to write code that works across different subtypes.",
+    exercises: [
+      {
+        title: "Shape Hierarchy",
+        difficulty: "medium",
+        desc: `Build a shape hierarchy:\n- Abstract base class <code>Shape</code> with abstract methods <code>area()</code> and <code>perimeter()</code>, plus a concrete method <code>describe()</code> returning a string like "Circle: area=78.54, perimeter=31.42".\n- Concrete subclasses: <code>Circle(radius)</code>, <code>Rectangle(width, height)</code>, <code>Triangle(a, b, c)</code> (sides).\n- Implement a function <code>total_area(shapes)</code> that sums the area of a mixed list of shapes.`,
+        examples: `shapes = [Circle(5), Rectangle(3, 4), Triangle(3, 4, 5)]\ntotal_area(shapes)  → 84.54  # ~78.54 + 12 + 6\nCircle(5).describe()→ "Circle: area=78.54, perimeter=31.42"`,
+        hint: "Use the abc module (ABC, abstractmethod). For Triangle area, use Heron's formula: s=(a+b+c)/2, area=sqrt(s*(s-a)*(s-b)*(s-c)).",
+        time: "O(n)", space: ""
+      },
+      {
+        title: "Employee Hierarchy",
+        difficulty: "medium",
+        desc: `Model an employee hierarchy:\n- <code>Employee(name, base_salary)</code>: has method <code>compute_bonus()</code> → 0\n- <code>Manager(name, base_salary, team_size)</code>: bonus = base_salary * 0.2 + team_size * 500\n- <code>Director(name, base_salary, department)</code>: bonus = base_salary * 0.4\n- <code>compute_total_pay(employees)</code>: returns a list of dicts <code>{"name": ..., "total": base_salary + bonus}</code>, sorted by total descending.\n- All classes must implement <code>__str__</code> and <code>__repr__</code>.`,
+        examples: `staff = [\n  Employee("Bob", 2800),\n  Manager("Alice", 4000, team_size=5),\n  Director("Carol", 6000, "R&D")\n]\ncompute_total_pay(staff)\n→ [{"name":"Carol","total":8400},{"name":"Alice","total":7300},{"name":"Bob","total":2800}]`,
+        hint: "Override compute_bonus() in each subclass. Use super().__init__() to call the parent constructor.",
+        time: "O(n log n)", space: ""
+      },
+      {
+        title: "Notification System",
+        difficulty: "medium",
+        desc: `Design a notification system:\n- Abstract class <code>Notifier</code> with method <code>send(recipient, message)</code>\n- Subclasses: <code>EmailNotifier</code>, <code>SMSNotifier</code>, <code>PushNotifier</code>\n- Each send() method should print a formatted delivery message (simulate sending).\n- Class <code>NotificationService</code> holds a list of notifiers and method <code>broadcast(recipient, message)</code> that sends through all of them.\n- Add a <code>LoggingNotifier</code> that wraps any notifier and logs the send timestamp before delegating (decorator pattern).`,
+        examples: `svc = NotificationService([EmailNotifier(), SMSNotifier()])\nsvc.broadcast("user@x.com", "Your order shipped!")\n# [EMAIL → user@x.com]: Your order shipped!\n# [SMS   → user@x.com]: Your order shipped!`,
+        hint: "For LoggingNotifier, store the wrapped notifier in __init__ and call it in send().",
+        time: "O(n notifiers)", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 12, cat: "oop",
+    title: "Composition & Special Methods",
+    objective: "Prefer composition over inheritance where appropriate. Implement Python's dunder methods to make objects feel native and intuitive to use.",
+    exercises: [
+      {
+        title: "Fraction Class",
+        difficulty: "medium",
+        desc: `Implement a <code>Fraction</code> class that represents rational numbers exactly. Support:\n- <code>__init__(numerator, denominator)</code>: reduce to lowest terms using GCD, handle sign so denominator is always positive\n- <code>__add__</code>, <code>__sub__</code>, <code>__mul__</code>, <code>__truediv__</code>\n- <code>__eq__</code>, <code>__lt__</code>, <code>__le__</code>\n- <code>__str__</code> (e.g. "3/4") and <code>__repr__</code>\n- <code>__float__</code> for conversion`,
+        examples: `a = Fraction(1, 2)\nb = Fraction(1, 3)\nstr(a + b)    → "5/6"\nstr(a * b)    → "1/6"\na > b         → True\nfloat(a)      → 0.5\nFraction(4,8) → Fraction(1,2)  # auto-reduced`,
+        hint: "Use math.gcd() to reduce. Implement __add__ as (a/b + c/d) = (a*d + b*c)/(b*d), then reduce.",
+        time: "O(log n)", space: ""
+      },
+      {
+        title: "Library Management System",
+        difficulty: "medium",
+        desc: `Use composition to model a library:\n- <code>Book(title, author, isbn, copies=1)</code>\n- <code>Member(name, member_id)</code>\n- <code>Library</code>: composes a list of Books and Members\n  - <code>add_book(book)</code>, <code>register_member(member)</code>\n  - <code>borrow(member_id, isbn)</code>: decrements available copies, raises if unavailable\n  - <code>return_book(member_id, isbn)</code>: increments copies\n  - <code>__len__</code>: number of distinct books\n  - <code>__contains__</code>: check if an ISBN is in the library\n  - <code>search(query)</code>: return books matching title or author (case-insensitive)`,
+        examples: `lib = Library("City Library")\nlib.add_book(Book("Clean Code","Robert Martin","978-0",3))\nlen(lib)  → 1\n"978-0" in lib  → True\nlib.search("martin")  → [<Book: Clean Code>]`,
+        hint: "Store books in a dict keyed by ISBN for O(1) lookup. Store members in a dict keyed by member_id.",
+        time: "O(n) search, O(1) borrow", space: ""
+      },
+      {
+        title: "Lazy Range with Iteration Protocol",
+        difficulty: "hard",
+        desc: `Implement a <code>LazyRange</code> class that mimics Python's built-in range but adds extra features:\n- <code>__init__(start, stop, step=1)</code>\n- <code>__iter__</code> and <code>__next__</code>: make it iterable (no list stored internally)\n- <code>__len__</code>: return the number of elements\n- <code>__getitem__</code>: support indexing and slicing (return a new LazyRange for slices)\n- <code>__contains__</code>: O(1) membership test\n- <code>__reversed__</code>: return a reversed iterator`,
+        examples: `r = LazyRange(1, 10, 2)   # 1,3,5,7,9\nlen(r)         → 5\n5 in r         → True\n4 in r         → False\nlist(r[1:3])   → [3, 5]\nlist(reversed(r)) → [9,7,5,3,1]`,
+        hint: "For __contains__, check that (val - start) % step == 0 and start <= val < stop. For slices in __getitem__, convert slice indices to a new start/stop/step.",
+        time: "O(1) for contains/len", space: "O(1)"
+      }
+    ]
+  },
+
+  {
+    day: 13, cat: "oop",
+    title: "Design Principles & Code Organization",
+    objective: "Recognize code smells and refactor them. Apply SOLID principles, separation of concerns, and design patterns to write maintainable code.",
+    exercises: [
+      {
+        title: "Refactor: God Class",
+        difficulty: "medium",
+        desc: `You are given the following monolithic class that handles too many responsibilities. Refactor it by splitting it into well-named, single-responsibility classes. Preserve all functionality.\n\n<pre>class OrderSystem:\n    def __init__(self):\n        self.orders = []\n        self.inventory = {}\n\n    def add_product(self, name, qty, price):\n        self.inventory[name] = {"qty": qty, "price": price}\n\n    def create_order(self, items):  # items = [(name, qty)]\n        total = 0\n        for name, qty in items:\n            if self.inventory.get(name, {}).get("qty", 0) < qty:\n                raise ValueError(f"Insufficient stock for {name}")\n            self.inventory[name]["qty"] -= qty\n            total += self.inventory[name]["price"] * qty\n        order = {"items": items, "total": total}\n        self.orders.append(order)\n        return order\n\n    def print_receipt(self, order):\n        for name, qty in order["items"]:\n            print(f"{name} x{qty}: {self.inventory[name]['price']*qty}")\n        print(f"TOTAL: {order['total']}")\n\n    def send_confirmation_email(self, order, email):\n        print(f"Email sent to {email}: Order total {order['total']}")</pre>`,
+        examples: `# Target: separate Inventory, Order, OrderService, Notifier\ninventory = Inventory()\norder_svc = OrderService(inventory)\nnotifier = EmailNotifier()\n# etc.`,
+        hint: "Identify responsibilities: stock management → Inventory; order creation → OrderService; formatting → ReceiptPrinter; sending notifications → Notifier.",
+        time: "Refactoring exercise", space: ""
+      },
+      {
+        title: "Open/Closed Principle: Discount Engine",
+        difficulty: "medium",
+        desc: `The following function is closed for extension — every new discount type requires editing it directly:\n\n<pre>def apply_discount(order_total, discount_type):\n    if discount_type == "STUDENT":\n        return order_total * 0.85\n    elif discount_type == "SENIOR":\n        return order_total * 0.80\n    elif discount_type == "STAFF":\n        return order_total * 0.70\n    return order_total</pre>\n\nRefactor using an abstract <code>DiscountStrategy</code> class and concrete subclasses so that new discount types can be added without modifying existing code. Implement a <code>DiscountRegistry</code> that maps string codes to strategies.`,
+        examples: `registry = DiscountRegistry()\nregistry.register("STUDENT", StudentDiscount())\nregistry.register("SENIOR", SeniorDiscount())\nregistry.apply("STUDENT", 100.0)  → 85.0\n# Adding a new type requires no existing edits:`,
+        hint: "Each strategy is a class with an apply(total) method. The registry is a dict mapping codes to instances.",
+        time: "O(1) lookup", space: ""
+      },
+      {
+        title: "Dependency Injection: Report Generator",
+        difficulty: "medium",
+        desc: `Implement a <code>ReportGenerator</code> that is decoupled from its data source and output format. It should accept any data source implementing a <code>DataSource</code> interface with method <code>fetch_data()</code>, and any formatter implementing <code>Formatter</code> with method <code>format(data)</code>. Write concrete implementations: <code>CSVDataSource</code>, <code>JSONDataSource</code>, <code>ConsoleFormatter</code>, <code>HTMLFormatter</code>. Then write two unit tests demonstrating the generator works with different combinations.`,
+        examples: `gen = ReportGenerator(CSVDataSource("data.csv"), HTMLFormatter())\noutput = gen.generate()\n# Returns HTML-formatted string of CSV data`,
+        hint: "Use abstract base classes. ReportGenerator.__init__ accepts objects of these abstract types — Python uses duck typing, so no explicit import needed.",
+        time: "Architectural exercise", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 14, cat: "oop",
+    title: "Unit Testing with pytest",
+    objective: "Write clean, thorough unit tests. Practice TDD by writing tests before implementation. Test edge cases, exceptions, and use fixtures and mocks.",
+    exercises: [
+      {
+        title: "Test a Shopping Cart",
+        difficulty: "easy",
+        desc: `Given the following incomplete <code>ShoppingCart</code> class, write a complete pytest test suite covering all methods and edge cases. Your test file must contain at least 12 distinct test functions.\n\n<pre>class ShoppingCart:\n    def add_item(self, name, price, qty=1): ...\n    def remove_item(self, name): ...\n    def update_quantity(self, name, qty): ...\n    def total(self): ...\n    def apply_coupon(self, code):  # codes: SAVE10 (-10%), SAVE20 (-20%)\n        ...\n    def clear(self): ...</pre>`,
+        examples: `# Example tests to write:\n# test_add_single_item()\n# test_add_duplicate_item_increases_qty()\n# test_remove_nonexistent_item_raises()\n# test_total_empty_cart_is_zero()\n# test_coupon_SAVE10_applies_correctly()\n# test_invalid_coupon_raises_ValueError()\n# ...and more`,
+        hint: "Group tests logically. Use pytest.raises(ExceptionType) for exception tests. Think about boundary values and invalid inputs.",
+        time: "TDD exercise", space: ""
+      },
+      {
+        title: "TDD: Implement from Tests",
+        difficulty: "medium",
+        desc: `The following test file is given to you. Your job is to implement the <code>TextStatistics</code> class from scratch so that ALL tests pass. Do not modify the tests.\n\n<pre>def test_word_count():\n    ts = TextStatistics("Hello world hello")\n    assert ts.word_count() == 3\n\ndef test_unique_words():\n    ts = TextStatistics("Hello world hello")\n    assert ts.unique_words() == {"hello", "world"}\n\ndef test_most_common_word():\n    ts = TextStatistics("a b a c a")\n    assert ts.most_common_word() == "a"\n\ndef test_average_word_length():\n    ts = TextStatistics("hi there you")\n    assert ts.average_word_length() == pytest.approx(3.0)\n\ndef test_empty_text_raises():\n    with pytest.raises(ValueError):\n        TextStatistics("")</pre>`,
+        hint: "Write the class to satisfy each test one by one. Start with the constructor. Use lowercase and strip() for normalization.",
+        time: "TDD exercise", space: ""
+      },
+      {
+        title: "Mocking External Dependencies",
+        difficulty: "hard",
+        desc: `You have a <code>WeatherService</code> class that calls an external API:\n\n<pre>class WeatherService:\n    def __init__(self, api_client):\n        self.api = api_client\n    def get_temperature(self, city):\n        response = self.api.get(f"/weather/{city}")\n        if response["status"] != 200:\n            raise ConnectionError("API unavailable")\n        return response["data"]["temp_celsius"]\n    def is_freezing(self, city):\n        return self.get_temperature(city) <= 0</pre>\n\nWrite a complete test suite using <code>unittest.mock.MagicMock</code> (or pytest-mock) that: (1) tests the happy path, (2) tests that ConnectionError is raised when status != 200, (3) tests is_freezing returns True/False correctly, (4) verifies the API was called with the correct URL.`,
+        examples: `from unittest.mock import MagicMock\nmock_api = MagicMock()\nmock_api.get.return_value = {"status":200,"data":{"temp_celsius":-5}}\nsvc = WeatherService(mock_api)\nassert svc.is_freezing("Brussels") == True\nmock_api.get.assert_called_with("/weather/Brussels")`,
+        hint: "Use MagicMock() and configure return_value or side_effect. Use assert_called_with() to verify the mock was called correctly.",
+        time: "Testing exercise", space: ""
+      }
+    ]
+  },
+
+  // ===================== SQL =====================
+  {
+    day: 15, cat: "sql",
+    title: "Relational Modeling & Basic Queries",
+    objective: "Design normalized schemas and write fundamental SQL queries using SELECT, WHERE, ORDER BY, GROUP BY, and aggregate functions.",
+    exercises: [
+      {
+        title: "Schema Design: E-commerce Platform",
+        difficulty: "medium",
+        desc: `Design a normalized relational schema (at least 3NF) for a small e-commerce platform with the following requirements:\n- Customers can place multiple orders.\n- Each order contains one or more products with a quantity.\n- Products belong to categories.\n- Each order has a status (pending, shipped, delivered, cancelled).\n- Orders have a shipping address (stored per-order, not just on the customer).\n\nWrite the CREATE TABLE statements in PostgreSQL syntax, including primary keys, foreign keys, appropriate data types, NOT NULL constraints, and at least one INDEX.`,
+        examples: `-- Expected tables (at minimum):\n-- customers, products, categories,\n-- orders, order_items, addresses\n\n-- Example:\nCREATE TABLE customers (\n    id SERIAL PRIMARY KEY,\n    email VARCHAR(255) UNIQUE NOT NULL,\n    created_at TIMESTAMP DEFAULT NOW()\n);`,
+        hint: "Use SERIAL or BIGSERIAL for auto-increment PKs. The order_items table is the junction table for the orders-products many-to-many relationship.",
+        time: "Schema design exercise", space: ""
+      },
+      {
+        title: "Aggregate Queries on Sales Data",
+        difficulty: "easy",
+        desc: `Given the schema from the previous exercise, write SQL queries for each of the following:\n1. Total revenue per product category, sorted descending.\n2. Number of orders per customer, only showing customers with more than 2 orders.\n3. The average order value per month for the current year.\n4. Products that have never been ordered.\n5. The top 5 customers by total spending.`,
+        examples: `-- Q1 example:\nSELECT c.name, SUM(oi.quantity * p.price) AS revenue\nFROM categories c\nJOIN products p ON p.category_id = c.id\nJOIN order_items oi ON oi.product_id = p.id\nGROUP BY c.name\nORDER BY revenue DESC;`,
+        hint: "Q4 uses a LEFT JOIN with IS NULL check. Q3 uses DATE_TRUNC('month', created_at) for grouping.",
+        time: "SQL exercise", space: ""
+      },
+      {
+        title: "Conditional Aggregates & CASE",
+        difficulty: "medium",
+        desc: `Using the e-commerce schema, write a single query that produces a report per customer showing:\n- Customer name and email\n- Total number of orders\n- Number of delivered orders\n- Number of cancelled orders\n- Total amount spent (only on delivered orders)\n- A status column: 'VIP' if total spend > 500, 'Regular' otherwise\n\nAll in a single SELECT statement using CASE expressions and conditional aggregates.`,
+        examples: `-- Expected output columns:\n-- name | email | total_orders | delivered | cancelled | total_spend | status\n-- Use: SUM(CASE WHEN status='delivered' THEN amount ELSE 0 END)`,
+        hint: "Conditional aggregate: COUNT(CASE WHEN condition THEN 1 END) or SUM(CASE WHEN ... THEN value ELSE 0 END).",
+        time: "SQL exercise", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 16, cat: "sql",
+    title: "Advanced JOINs & Subqueries",
+    objective: "Master all JOIN types and write correlated and non-correlated subqueries. Understand when to use EXISTS, IN, and derived tables.",
+    exercises: [
+      {
+        title: "JOIN Variations",
+        difficulty: "medium",
+        desc: `Given tables: <code>employees(id, name, dept_id, manager_id, salary)</code> and <code>departments(id, name, budget)</code>, write queries for:\n1. All employees with their department name (INNER JOIN).\n2. All employees including those with no department (LEFT JOIN).\n3. All departments including those with no employees (RIGHT JOIN / LEFT JOIN reversed).\n4. Each employee paired with their manager's name (self-join on manager_id).\n5. Departments where the total employee salary exceeds the department budget.`,
+        examples: `-- Q4: Self-join for manager name\nSELECT e.name AS employee,\n       m.name AS manager\nFROM employees e\nLEFT JOIN employees m ON e.manager_id = m.id;`,
+        hint: "For Q5, GROUP BY dept_id in a subquery or use HAVING SUM(salary) > MAX(d.budget) after joining.",
+        time: "SQL exercise", space: ""
+      },
+      {
+        title: "Subqueries: Correlated & Non-Correlated",
+        difficulty: "hard",
+        desc: `Using the employees/departments schema, write SQL for:\n1. Employees earning more than the average salary of their own department (correlated subquery).\n2. Departments where ALL employees earn above 3000 (use NOT EXISTS or ALL).\n3. The 2nd highest salary overall (without using LIMIT/OFFSET — use a subquery).\n4. Employees who share the same salary as at least one other employee (correlated EXISTS).\n5. Rewrite query #1 using a window function instead of a subquery.`,
+        examples: `-- Q1: Correlated subquery\nSELECT name, salary, dept_id\nFROM employees e\nWHERE salary > (\n    SELECT AVG(salary)\n    FROM employees\n    WHERE dept_id = e.dept_id\n);`,
+        hint: "For Q3: SELECT MAX(salary) FROM employees WHERE salary < (SELECT MAX(salary) FROM employees). For Q5: use AVG(salary) OVER (PARTITION BY dept_id).",
+        time: "SQL exercise", space: ""
+      },
+      {
+        title: "CTEs & Recursive Queries",
+        difficulty: "hard",
+        desc: `1. Rewrite a complex multi-join query using CTEs to improve readability. Start with a query that finds the top-spending customer per product category — use CTEs to break it into steps.\n\n2. Write a recursive CTE on a <code>categories(id, name, parent_id)</code> table to list all subcategories of a given root category at any depth, showing the full path like "Electronics > Computers > Laptops".`,
+        examples: `-- Recursive CTE skeleton:\nWITH RECURSIVE category_tree AS (\n    -- Base case: root category\n    SELECT id, name, name AS path, 0 AS depth\n    FROM categories WHERE parent_id IS NULL\n    UNION ALL\n    -- Recursive case\n    SELECT c.id, c.name,\n           ct.path || ' > ' || c.name,\n           ct.depth + 1\n    FROM categories c\n    JOIN category_tree ct ON c.parent_id = ct.id\n)\nSELECT * FROM category_tree ORDER BY path;`,
+        hint: "The WITH RECURSIVE keyword enables tree traversal. Always include a termination condition (depth limit or leaf node) to avoid infinite loops.",
+        time: "SQL exercise", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 17, cat: "sql",
+    title: "Window Functions & Performance",
+    objective: "Use window functions for analytical queries without collapsing rows. Understand indexing, query plans, and how to optimize slow queries.",
+    exercises: [
+      {
+        title: "Window Functions Deep Dive",
+        difficulty: "hard",
+        desc: `Using a <code>sales(id, salesperson, region, amount, sale_date)</code> table, write queries using window functions:\n1. Rank salespeople by total amount within each region (<code>RANK()</code>).\n2. Running total of sales per salesperson ordered by date (<code>SUM() OVER</code>).\n3. Each sale's amount as a percentage of the salesperson's total (<code>ratio_to_report</code> equivalent).\n4. The difference between each sale and the previous sale for the same salesperson (<code>LAG()</code>).\n5. Sales in the top 25% by amount within each region (<code>NTILE(4)</code> or <code>PERCENT_RANK()</code>).`,
+        examples: `-- Q2: Running total\nSELECT salesperson, sale_date, amount,\n       SUM(amount) OVER (\n           PARTITION BY salesperson\n           ORDER BY sale_date\n           ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n       ) AS running_total\nFROM sales;`,
+        hint: "PARTITION BY groups rows like GROUP BY but keeps individual rows. ORDER BY inside OVER defines the frame for cumulative functions.",
+        time: "SQL exercise", space: ""
+      },
+      {
+        title: "Query Optimization Lab",
+        difficulty: "medium",
+        desc: `You are given the following slow query on a 10M-row table. Your task is to: (1) explain why it is slow, (2) propose and write the DDL for indexes that would speed it up, (3) identify any additional rewrite improvements.\n\n<pre>SELECT c.name, COUNT(o.id) as order_count,\n       SUM(oi.quantity * p.price) as revenue\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items oi ON oi.order_id = o.id\nJOIN products p ON p.id = oi.product_id\nWHERE o.created_at >= '2024-01-01'\n  AND o.status = 'delivered'\n  AND p.category_id IN (SELECT id FROM categories WHERE name LIKE '%Electronics%')\nGROUP BY c.name\nHAVING SUM(oi.quantity * p.price) > 1000\nORDER BY revenue DESC\nLIMIT 20;</pre>`,
+        examples: `-- Index candidates to consider:\n-- 1. orders(created_at, status) composite index\n-- 2. orders(customer_id)\n-- 3. order_items(order_id)\n-- 4. products(category_id)\n-- The subquery on categories can become a JOIN`,
+        hint: "A LIKE '%Electronics%' with a leading wildcard cannot use a B-tree index. Consider pg_trgm extension or restructuring. Replace the subquery with a JOIN.",
+        time: "SQL optimization exercise", space: ""
+      },
+      {
+        title: "Transactions & Isolation",
+        difficulty: "medium",
+        desc: `Write the SQL (PostgreSQL) for the following transactional scenario with correct error handling:\n\nA bank transfer of <code>amount</code> from account A to account B must:\n1. Check that account A has sufficient funds; if not, raise an exception.\n2. Deduct from A and credit to B atomically.\n3. Log the transaction in a <code>transfer_log</code> table.\n4. If any step fails, roll back completely.\n\nAlso answer in comments: What isolation level would you use and why? What is the risk of using READ COMMITTED here? How does FOR UPDATE prevent a race condition?`,
+        examples: `BEGIN;\n\nSELECT balance FROM accounts\nWHERE id = :from_id FOR UPDATE;  -- locks the row\n\n-- Check and deduct...\n-- Credit...\n-- Log...\n\nCOMMIT;`,
+        hint: "SELECT ... FOR UPDATE acquires a row-level lock preventing concurrent transactions from modifying the balance between your read and write.",
+        time: "SQL transactional exercise", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 18, cat: "sql",
+    title: "SQL Review & Mixed Challenge",
+    objective: "Consolidate SQL skills with realistic, multi-step problems. Practice writing production-quality queries from scratch on a new schema.",
+    exercises: [
+      {
+        title: "Schema Design: SaaS Multi-Tenant App",
+        difficulty: "hard",
+        desc: `Design a schema for a multi-tenant SaaS project management tool:\n- Organizations have members with roles (admin, member, viewer)\n- Projects belong to organizations\n- Tasks belong to projects, have assignees, labels, due dates, and statuses\n- Comments can be left on tasks by members\n- Activity log tracking all changes (what, who, when, old/new value)\n\nWrite all CREATE TABLE statements. Justify your choice between JSONB vs. separate tables for labels and activity data. Add appropriate indexes.`,
+        examples: `-- Key design decisions:\n-- 1. Row-level security with org_id on every table\n-- 2. Labels: many-to-many via task_labels junction\n-- 3. Activity log: flexible schema using JSONB for old/new values`,
+        hint: "Consider adding org_id as a foreign key on all tables for row-level security. JSONB is appropriate for activity logs since the shape of old/new values varies by entity type.",
+        time: "Schema design", space: ""
+      },
+      {
+        title: "Complex Reporting Query",
+        difficulty: "hard",
+        desc: `Using the SaaS schema from exercise 1, write a single SQL query that produces a project health dashboard. For each project, show:\n- Project name and organization name\n- Total tasks, open tasks, completed tasks, overdue tasks (past due_date and not done)\n- Percentage completion\n- Most active contributor (user with most task completions)\n- Days since last activity\n\nUse CTEs to structure the query clearly.`,
+        examples: `-- Expected structure:\nWITH task_stats AS (\n    -- aggregate task counts per project\n),\ncontributor_stats AS (\n    -- find top contributor per project\n),\nlast_activity AS (\n    -- find latest activity per project\n)\nSELECT ...\nFROM projects p\nJOIN task_stats ts ON ...\nJOIN contributor_stats cs ON ...\nJOIN last_activity la ON ...;`,
+        hint: "Use FILTER (WHERE status='done') as an alternative to CASE WHEN for conditional counts. Use ROW_NUMBER() OVER (PARTITION BY project_id ORDER BY completions DESC) for top contributor.",
+        time: "SQL exercise", space: ""
+      }
+    ]
+  },
+
+  // ===================== GIT / DEBUG / PRACTICES =====================
+  {
+    day: 19, cat: "git",
+    title: "Git Workflows & Collaborative Practices",
+    objective: "Master Git workflows used in professional teams. Understand branching strategies, conflict resolution, and commit hygiene.",
+    exercises: [
+      {
+        title: "Feature Branch Workflow Simulation",
+        difficulty: "easy",
+        desc: `Set up a local Git repository and simulate a complete feature branch workflow:\n1. Initialize a repo with a README and an initial commit on <code>main</code>.\n2. Create a branch <code>feature/user-auth</code> and add two commits simulating authentication code.\n3. Meanwhile, simulate a hotfix on <code>main</code>: create branch <code>hotfix/typo-fix</code>, commit a fix, merge back to <code>main</code>.\n4. Rebase <code>feature/user-auth</code> onto the updated <code>main</code>.\n5. Squash the two feature commits into one using interactive rebase.\n6. Merge to <code>main</code> with a no-fast-forward merge.\n\nDocument every command used and explain the difference between merge and rebase in comments.`,
+        examples: `git init\ngit checkout -b feature/user-auth\n# ... make commits ...\ngit rebase main\ngit rebase -i HEAD~2   # squash\ngit checkout main\ngit merge --no-ff feature/user-auth`,
+        hint: "In the interactive rebase, change 'pick' to 'squash' (or 's') on the second commit. Write a clear combined commit message.",
+        time: "Git workflow exercise", space: ""
+      },
+      {
+        title: "Conflict Resolution",
+        difficulty: "medium",
+        desc: `Create a scenario with a genuine merge conflict and resolve it:\n1. On <code>main</code>: create <code>calculator.py</code> with a basic <code>add(a, b)</code> function.\n2. Branch <code>feature/multiply</code>: add a <code>multiply</code> function AND modify the docstring of <code>add</code>.\n3. Back on <code>main</code>: modify the same docstring of <code>add</code> differently AND add a <code>subtract</code> function.\n4. Attempt to merge <code>feature/multiply</code> into <code>main</code> — resolve the conflict manually.\n5. Write a commit message following the Conventional Commits specification.`,
+        examples: `# Conventional Commits format:\n# feat: add multiply and subtract operations\n#\n# Merged feature/multiply with conflict in add() docstring.\n# Kept the more descriptive version from feature branch.\n# Co-authored-by: ...`,
+        hint: "During conflict resolution, the <<<, ===, >>> markers show both versions. Choose one, edit the file, then git add the resolved file.",
+        time: "Git exercise", space: ""
+      },
+      {
+        title: "Git Archaeology & Recovery",
+        difficulty: "medium",
+        desc: `Given a repository with a messy history, perform the following tasks using only Git commands:\n1. Find the commit that introduced a specific bug (use <code>git bisect</code>).\n2. A developer accidentally committed a password to <code>config.py</code> 3 commits ago — remove it from history using <code>git filter-branch</code> or <code>git filter-repo</code>.\n3. Someone force-pushed and deleted 2 commits — recover them using <code>git reflog</code>.\n4. Create a <code>.gitignore</code> that covers Python projects correctly and unstage files that shouldn't have been committed.\n\nFor each task, write the exact command sequence and explain what it does.`,
+        examples: `# Bisect workflow:\ngit bisect start\ngit bisect bad HEAD\ngit bisect good v1.0\n# Test, then mark good/bad until Git finds the culprit\ngit bisect reset`,
+        hint: "git reflog shows the full history of HEAD movements, even after force pushes. git checkout <hash> then git branch recovery-branch recreates a lost branch.",
+        time: "Git exercise", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 20, cat: "git",
+    title: "Debugging Techniques & Best Practices",
+    objective: "Systematically debug Python code using tools and structured reasoning. Apply code quality practices: linting, type hints, logging, and error handling.",
+    exercises: [
+      {
+        title: "Debug a Broken Algorithm",
+        difficulty: "medium",
+        desc: `The following code has multiple bugs. Identify and fix ALL of them without rewriting the function from scratch. Document each bug found with: (1) what line is wrong, (2) what the bug is, (3) why it causes incorrect behavior, (4) the fix.\n\n<pre>def find_all_paths(graph, start, end, path=[]):\n    path = path + [start]\n    if start == end:\n        return path\n    if not start in graph:\n        return []\n    paths = []\n    for node in graph[start]:\n        if node not in path:\n            newpaths = find_all_paths(graph, node, end, path)\n            for newpath in newpaths:\n                paths.append(newpath)\n    return paths\n\ngraph = {"A":["B","C"],"B":["D"],"C":["D"],"D":[]}\nprint(find_all_paths(graph, "A", "D"))</pre>`,
+        examples: `# Bug 1: mutable default argument path=[]\n#   → Shared across calls. Fix: def ...(path=None): if path is None: path=[]\n# Bug 2: returns path (a list) not [path] for the base case\n#   → find_all_paths expects to iterate over a list of paths\n# ...find the rest`,
+        hint: "Use the pdb debugger or add print statements to trace the execution. The function should return a list of paths (list of lists), not a single path.",
+        time: "Debugging exercise", space: ""
+      },
+      {
+        title: "Add Type Hints & Logging",
+        difficulty: "easy",
+        desc: `Take the following untyped, silent function and improve it by:\n1. Adding complete type hints (parameters and return type) using Python's <code>typing</code> module.\n2. Adding structured logging using the <code>logging</code> module (not print statements) — log at appropriate levels (DEBUG, INFO, WARNING, ERROR).\n3. Adding proper exception handling with specific exception types.\n4. Validating all inputs at function entry.\n\n<pre>def process_orders(orders, discount_code, min_amount):\n    results = []\n    discounts = {"SAVE10": 0.10, "SAVE20": 0.20}\n    for order in orders:\n        total = sum(item["price"] * item["qty"] for item in order["items"])\n        if discount_code in discounts:\n            total = total * (1 - discounts[discount_code])\n        if total >= min_amount:\n            results.append({"id": order["id"], "total": round(total, 2)})\n    return results</pre>`,
+        hint: "Use Dict, List, Optional from typing. Raise TypeError for wrong types, ValueError for invalid values. Log each successful order at DEBUG, skipped ones at INFO, unknown discount codes at WARNING.",
+        time: "Code quality exercise", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 21, cat: "git",
+    title: "Code Review, Documentation & Best Practices",
+    objective: "Write self-documenting code, meaningful docstrings, and perform constructive code reviews. Apply PEP 8 and common Python idioms.",
+    exercises: [
+      {
+        title: "Code Review: Spot the Issues",
+        difficulty: "medium",
+        desc: `Review the following code as if you were a senior developer. Identify ALL issues (at least 8) across these categories: naming, PEP 8, logic bugs, performance, security, maintainability, missing error handling, and Python idioms. For each issue, state the line number, category, description, and your recommended fix.\n\n<pre>import os\npassword = "admin123"\n\nclass data_processor:\n    ITEMS = []\n    def __init__(self, data):\n        self.data = data\n        data_processor.ITEMS.append(self)\n\n    def Process(self, type):\n        result = []\n        for i in range(0, len(self.data)):\n            if type == "double":\n                result.append(self.data[i] * 2)\n            elif type == "square":\n                result.append(self.data[i] ** 2)\n        return result\n\n    def save(self, filename):\n        f = open(filename, "w")\n        f.write(str(self.Process("double")))\n        f.close()</pre>`,
+        hint: "Look for: hardcoded credentials, mutable class attribute shared across instances, PEP8 naming, shadowing built-in 'type', unnecessary range(len()), file not closed on exception, missing type hints, no docstrings...",
+        time: "Code review exercise", space: ""
+      },
+      {
+        title: "Write Production-Quality Docstrings",
+        difficulty: "easy",
+        desc: `Write complete, Google-style or NumPy-style docstrings for the following functions. Each docstring must include: a one-line summary, extended description if needed, Args section, Returns section, Raises section, and at least one Example.\n\nFunctions to document:\n1. <code>merge_sorted_arrays(arr1, arr2)</code>\n2. <code>BinarySearchTree.insert(value)</code>\n3. A module-level docstring for a file called <code>text_processing.py</code>`,
+        examples: `def merge_sorted_arrays(arr1: list, arr2: list) -> list:\n    """Merge two sorted arrays into a single sorted array.\n\n    Uses a two-pointer approach to merge in O(n+m) time.\n    Both input arrays must already be sorted in ascending order.\n\n    Args:\n        arr1: First sorted array of comparable elements.\n        arr2: Second sorted array of comparable elements.\n\n    Returns:\n        A new sorted list containing all elements from both arrays.\n\n    Raises:\n        TypeError: If either argument is not a list.\n\n    Example:\n        >>> merge_sorted_arrays([1,3,5],[2,4,6])\n        [1, 2, 3, 4, 5, 6]\n    """`,
+        hint: "Follow a consistent style throughout. The summary line should be imperative mood ('Merge' not 'Merges'). Document all edge cases in the extended description.",
+        time: "Documentation exercise", space: ""
+      }
+    ]
+  },
+
+  // ===================== FINAL PROJECT =====================
+  {
+    day: 22, cat: "project",
+    title: "Final Project — Day 1: Architecture & Setup",
+    objective: "Define the project scope, design the data model, set up the repository with clean structure, and write the initial test harness.",
+    exercises: [
+      {
+        title: "Project: Task Management API (Kickoff)",
+        difficulty: "hard",
+        desc: `You will build a complete Task Management System over 4 days that integrates ALL skills learned. It must demonstrate Python OOP, SQL design, Git workflow, testing, and clean code.\n\n**Day 1 deliverables:**\n1. Initialize a Git repo with a structured Python project layout (src/, tests/, docs/).\n2. Design and write the full PostgreSQL schema: users, teams, projects, tasks, labels, task_labels, comments, activity_log.\n3. Create Python model classes for each entity using OOP (with properties, validation, __repr__).\n4. Write a <code>DatabaseConnection</code> context manager that handles connection lifecycle.\n5. Create a README.md with: project description, architecture diagram (ASCII), setup instructions, and running tests.`,
+        examples: `# Project structure:\ntask_manager/\n├── src/\n│   ├── models/      # Task, User, Project...\n│   ├── repositories/# TaskRepository, UserRepository...\n│   ├── services/    # TaskService, NotificationService...\n│   └── db.py        # DatabaseConnection\n├── tests/\n├── sql/\n│   └── schema.sql\n└── README.md`,
+        hint: "Use the Repository pattern to separate SQL logic from business logic. Services coordinate between repositories.",
+        time: "Full day project work", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 23, cat: "project",
+    title: "Final Project — Day 2: Core Logic",
+    objective: "Implement the core business logic with full test coverage. All repository methods must be tested.",
+    exercises: [
+      {
+        title: "Task Management API (Core Implementation)",
+        difficulty: "hard",
+        desc: `**Day 2 deliverables:**\n1. Implement all CRUD repository classes with raw SQL (no ORM): <code>UserRepository</code>, <code>ProjectRepository</code>, <code>TaskRepository</code>.\n2. Implement <code>TaskService</code> with business rules: assign tasks, change status with validation (e.g., can't complete a task that's blocked), calculate project completion percentage.\n3. Write 20+ unit tests covering: happy paths, edge cases, invalid inputs, status transition rules.\n4. Implement a full-text search function on tasks using SQL <code>ILIKE</code> or <code>tsvector</code>.\n5. Add an activity logger that records every task state change using the Repository pattern.`,
+        examples: `class TaskService:\n    def assign_task(self, task_id, user_id): ...\n    def complete_task(self, task_id): ...\n    def get_project_stats(self, project_id) -> dict: ...\n    def search_tasks(self, query, project_id=None) -> list: ...`,
+        hint: "Use dependency injection: TaskService receives TaskRepository and ActivityLogger in its constructor — never instantiate them internally.",
+        time: "Full day project work", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 24, cat: "project",
+    title: "Final Project — Day 3: Reporting & CLI",
+    objective: "Add a reporting layer with complex SQL queries and a command-line interface for interacting with the system.",
+    exercises: [
+      {
+        title: "Task Management API (Reporting & CLI)",
+        difficulty: "hard",
+        desc: `**Day 3 deliverables:**\n1. Implement a <code>ReportService</code> with 5 complex SQL reports using CTEs and window functions:\n   - Team productivity report (tasks completed per user per week)\n   - Project health dashboard (completion %, overdue tasks, blockers)\n   - Task cycle time analysis (average time from creation to completion per project)\n   - Workload distribution (tasks per user with priority breakdown)\n   - Trend report (tasks created vs. completed over time using LAG)\n2. Build a CLI using <code>argparse</code> for: creating projects, adding tasks, assigning, changing status, and displaying reports.\n3. Export reports to CSV using Python's <code>csv</code> module.\n4. Add a <code>Makefile</code> with commands: <code>make test</code>, <code>make lint</code>, <code>make run</code>.`,
+        examples: `# CLI usage:\npython main.py create-project "API Redesign" --owner alice\npython main.py add-task --project 1 --title "Write specs" --priority high\npython main.py report productivity --team engineering --weeks 4`,
+        hint: "For the cycle time query, use AVG(completed_at - created_at) grouped by project_id, filtering WHERE status='done' AND completed_at IS NOT NULL.",
+        time: "Full day project work", space: ""
+      }
+    ]
+  },
+
+  {
+    day: 25, cat: "project",
+    title: "Final Project — Day 4: Polish & Mock Interview",
+    objective: "Finalize documentation, run the full test suite, conduct a code review on your own code, and prepare for the technical interview defense.",
+    exercises: [
+      {
+        title: "Task Management API (Final Review & Defense Prep)",
+        difficulty: "hard",
+        desc: `**Day 4 deliverables:**\n1. Complete all docstrings and add type hints throughout the codebase.\n2. Run <code>pylint</code> or <code>flake8</code> and fix all warnings above level C.\n3. Ensure test coverage > 80% using <code>pytest-cov</code>.\n4. Write a concise ARCHITECTURE.md explaining every design decision.\n5. Tag the release as <code>v1.0.0</code> following semantic versioning.\n\n**Mock interview preparation — prepare 5-minute answers for each:**\n- Walk me through your overall architecture and why you structured it this way.\n- Where did you apply SOLID principles and why?\n- What is the most complex SQL query you wrote? Explain it line by line.\n- What would you change if this needed to handle 1 million tasks?\n- How did you decide what to test and how did you handle testing the database layer?`,
+        examples: `# Final checklist:\n[ ] All tests passing (pytest -v)\n[ ] Coverage report: pytest --cov=src tests/\n[ ] Linting clean: flake8 src/\n[ ] Type checking: mypy src/\n[ ] Git log is clean: conventional commits, no debug commits\n[ ] README is complete and accurate\n[ ] Demo script works end-to-end`,
+        hint: "For the scalability question, think about: indexes, connection pooling, caching (Redis), read replicas, pagination, async processing. You don't need to implement them — just articulate the trade-offs.",
+        time: "Full day project work + interview prep", space: ""
+      }
+    ]
+  }
+];
+
+// ===================== BUILD PIPS =====================
+const pipsContainer = document.getElementById('pips');
+days.forEach(d => {
+  const pip = document.createElement('div');
+  pip.className = `day-pip ${d.cat}`;
+  pip.textContent = d.day;
+  pip.title = `Day ${d.day}: ${d.title}`;
+  pip.onclick = () => {
+    const block = document.getElementById(`day-${d.day}`);
+    if (block) {
+      block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (!block.classList.contains('open')) block.classList.add('open');
+    }
+  };
+  pipsContainer.appendChild(pip);
+});
+
+// ===================== BUILD DAY BLOCKS =====================
+const container = document.getElementById('days-container');
+
+days.forEach(d => {
+  const block = document.createElement('div');
+  block.className = `day-block`;
+  block.id = `day-${d.day}`;
+  block.dataset.cat = d.cat;
+
+  const catLabel = { python: 'Python/Algo', oop: 'OOP', sql: 'SQL', git: 'Git & Debug', project: 'Final Project' }[d.cat];
+  const numClass = { python: '', oop: 'oop', sql: 'sql', git: 'git', project: 'project' }[d.cat];
+
+  let exercisesHTML = '';
+  (d.exercises || []).forEach((ex, i) => {
+    const complexityHTML = ex.time ? `
+      <div class="complexity">
+        ${ex.time ? `<span>⏱ ${ex.time}</span>` : ''}
+        ${ex.space ? `<span>🗄 Space: ${ex.space}</span>` : ''}
+      </div>` : '';
+
+    const examplesHTML = ex.examples ? `
+      <div class="ex-section-label">Examples</div>
+      <pre>${ex.examples}</pre>` : '';
+
+    const hintHTML = ex.hint ? `<div class="hint">${ex.hint}</div>` : '';
+
+    exercisesHTML += `
+    <div class="exercise" id="day-${d.day}-ex-${i+1}">
+      <div class="ex-header" onclick="toggleEx(this)">
+        <span class="ex-num">#${String(i+1).padStart(2,'0')}</span>
+        <span class="ex-title">${ex.title}</span>
+        <span class="difficulty ${ex.difficulty}">${ex.difficulty}</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-desc">${ex.desc}</div>
+        ${examplesHTML}
+        ${hintHTML}
+        ${complexityHTML}
+      </div>
+    </div>`;
+  });
+
+  block.innerHTML = `
+    <div class="day-header" onclick="toggleDay(this)">
+      <span class="day-number ${numClass}">DAY ${String(d.day).padStart(2,'0')}</span>
+      <span class="day-title">${d.title}</span>
+      <span class="day-meta">${catLabel} · ${(d.exercises||[]).length} exercises</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="day-content">
+      <div class="day-objective ${numClass}">🎯 ${d.objective}</div>
+      ${exercisesHTML}
+    </div>`;
+
+  container.appendChild(block);
+});
+
+// ===================== INTERACTIONS =====================
+function toggleDay(header) {
+  const block = header.parentElement;
+  block.classList.toggle('open');
+}
+
+function toggleEx(header) {
+  const ex = header.parentElement;
+  ex.classList.toggle('open');
+  event.stopPropagation();
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat;
+    document.querySelectorAll('.day-block').forEach(block => {
+      block.style.display = (cat === 'all' || block.dataset.cat === cat) ? 'block' : 'none';
+    });
+  });
+});
+
+// Open Day 1 by default
+document.getElementById('day-1').classList.add('open');
+</script>
+</body>
+</html>

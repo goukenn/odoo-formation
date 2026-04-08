@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.board{padding:1rem 0;overflow-x:auto}
+.cols{display:flex;gap:12px;min-width:max-content;padding-bottom:1rem}
+.col{width:240px;flex-shrink:0;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:10px}
+.col-header{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.col-header .count{font-size:11px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:99px;padding:1px 7px;color:var(--color-text-tertiary)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.card:hover{border-color:var(--color-border-secondary)}
+.card-day{font-size:11px;font-weight:500;margin-bottom:4px}
+.card-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px;line-height:1.4}
+.card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:10px;padding:2px 6px;border-radius:99px;font-weight:500}
+.tag-wiki{background:#E1F5EE;color:#085041}
+.tag-code{background:#E6F1FB;color:#0C447C}
+.tag-review{background:#EEEDFE;color:#3C3489}
+.tag-project{background:#FAEEDA;color:#633806}
+.phase-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+.dot-teal{background:#1D9E75}
+.dot-blue{background:#378ADD}
+.dot-purple{background:#534AB7}
+.dot-amber{background:#BA7517}
+.detail-panel{display:none;margin-top:1rem;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem}
+.detail-panel.open{display:block}
+.detail-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.detail-meta{font-size:12px;color:var(--color-text-secondary);margin-bottom:12px}
+.detail-section{font-size:12px;color:var(--color-text-secondary);font-weight:500;margin:10px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+.detail-body{font-size:13px;color:var(--color-text-primary);line-height:1.6}
+.close-btn{float:right;font-size:12px;color:var(--color-text-tertiary);cursor:pointer;padding:2px 6px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)}
+.close-btn:hover{background:var(--color-background-secondary)}
+</style>
+
+<h2 class="sr-only">Kanban — Programme Python 24 jours</h2>
+
+<div class="board">
+<div class="cols" id="board"></div>
+</div>
+<div class="detail-panel" id="detail">
+  <span class="close-btn" onclick="closeDetail()">fermer</span>
+  <div class="detail-title" id="d-title"></div>
+  <div class="detail-meta" id="d-meta"></div>
+  <div class="detail-section">Objectifs</div>
+  <div class="detail-body" id="d-obj"></div>
+  <div class="detail-section">Livrables</div>
+  <div class="detail-body" id="d-del"></div>
+</div>
+
+<script>
+const phases=[
+  {label:"Phase 1 — Fondations",dot:"teal",days:"1-8"},
+  {label:"Phase 2 — Intermédiaire",dot:"blue",days:"9-16"},
+  {label:"Phase 3 — Avancé",dot:"purple",days:"17-22"},
+  {label:"Projet Final",dot:"amber",days:"23-24"}
+];
+
+const cards=[
+  {day:1,phase:0,title:"Environnement & bases",tags:["wiki","code"],obj:"Installer Python 3.x, configurer venv, pip. Variables, types, print(), input().",del:"Wiki : installation. Script : hello.py avec types de base."},
+  {day:2,phase:0,title:"Structures de contrôle",tags:["wiki","code"],obj:"if/elif/else, boucles for et while, break/continue/pass.",del:"Wiki : flux de contrôle. Exercice : jeu de devinette nombre."},
+  {day:3,phase:0,title:"Fonctions",tags:["wiki","code"],obj:"def, paramètres, valeurs par défaut, *args, **kwargs, return multiple.",del:"Wiki : fonctions. Script : bibliothèque de calculs mathématiques."},
+  {day:4,phase:0,title:"Listes, tuples, sets",tags:["wiki","code"],obj:"Création, indexation, slicing, méthodes, compréhensions de liste.",del:"Wiki : séquences. Exercice : manipulation d'une liste d'étudiants."},
+  {day:5,phase:0,title:"Dictionnaires",tags:["wiki","code"],obj:"Création, accès, .get(), .items(), .keys(), compréhensions de dict.",del:"Wiki : dict. Script : annuaire téléphonique en console."},
+  {day:6,phase:0,title:"Chaînes de caractères",tags:["wiki","code"],obj:"f-strings, méthodes str, format(), encodage, regex basique.",del:"Wiki : strings. Exercice : formateur de texte et parser CSV simple."},
+  {day:7,phase:0,title:"Fichiers & exceptions",tags:["wiki","code"],obj:"open(), with, modes r/w/a, try/except/finally, exceptions personnalisées.",del:"Wiki : I/O. Script : logger de fichier avec gestion d'erreurs."},
+  {day:8,phase:0,title:"Review Phase 1",tags:["review"],obj:"Relecture du code, refactorisation, respect PEP 8, documentation.",del:"Code review des jours 1-7. Rapport de qualité personnel."},
+  {day:9,phase:1,title:"Modules & packages",tags:["wiki","code"],obj:"import, from...import, __init__.py, structure de package, PyPI.",del:"Wiki : modules. Créer un package personnel réutilisable."},
+  {day:10,phase:1,title:"POO — Classes",tags:["wiki","code"],obj:"class, __init__, self, méthodes, héritage, super(), polymorphisme.",del:"Wiki : POO. Modèle Animal -> Chien, Chat avec comportements."},
+  {day:11,phase:1,title:"POO avancée",tags:["wiki","code"],obj:"@property, @staticmethod, @classmethod, __str__, __repr__, dunder.",del:"Wiki : dunder methods. Classe Vector2D complète avec opérateurs."},
+  {day:12,phase:1,title:"Itérateurs & générateurs",tags:["wiki","code"],obj:"__iter__, __next__, yield, expressions génératrices, itertools.",del:"Wiki : itérateurs. Générateur de nombres premiers infini."},
+  {day:13,phase:1,title:"Décorateurs",tags:["wiki","code"],obj:"Fonctions du 1er ordre, closures, @decorator, functools.wraps.",del:"Wiki : décorateurs. Décorateurs : timer, logger, cache simple."},
+  {day:14,phase:1,title:"Gestion de données",tags:["wiki","code"],obj:"json, csv, pathlib, os, shutil. Lecture/écriture structurée.",del:"Wiki : data I/O. Script d'analyse de fichiers CSV en statistiques."},
+  {day:15,phase:1,title:"Tests avec pytest",tags:["wiki","code"],obj:"pytest, assert, fixtures, parametrize, coverage.",del:"Wiki : testing. Suite de tests pour le package du jour 9."},
+  {day:16,phase:1,title:"Review Phase 2",tags:["review"],obj:"Audit de code OOP, patterns, couverture de tests, refacto.",del:"Code review jours 9-15. Score coverage visé : >80%."},
+  {day:17,phase:2,title:"AST & introspection",tags:["wiki","code"],obj:"Module ast, inspect, analyse de code source Python programmatique.",del:"Wiki : AST. Extracteur basique de fonctions depuis un fichier .py."},
+  {day:18,phase:2,title:"Extracteur Python -> JSON",tags:["wiki","code","project"],obj:"ast.parse(), walk(), NodeVisitor. Extraction classes, fonctions, docstrings, args.",del:"Script complet : py_extractor.py -> sortie analysis.json."},
+  {day:19,phase:2,title:"Concurrence & async",tags:["wiki","code"],obj:"threading, multiprocessing, asyncio, await, aiofiles.",del:"Wiki : async. Lecteur de fichiers concurrent pour gros projets."},
+  {day:20,phase:2,title:"Web avec Flask",tags:["wiki","code","project"],obj:"Flask routes, templates Jinja2, static files, JSON API endpoints.",del:"Wiki : Flask. Webapp qui sert le fichier analysis.json via /api/project."},
+  {day:21,phase:2,title:"Frontend de la webapp",tags:["wiki","code","project"],obj:"Fetch API, rendu dynamique HTML, filtrage par type d'entité.",del:"Interface web : navigation classes/fonctions, recherche, détail docstring."},
+  {day:22,phase:2,title:"Review Phase 3",tags:["review"],obj:"Audit de l'extracteur AST, tests, robustesse sur projets réels.",del:"Code review jours 17-21. Tests sur 3 projets Python différents."},
+  {day:23,phase:3,title:"Projet — Intégration",tags:["project"],obj:"Assembler py_extractor + Flask + frontend en app autonome avec CLI.",del:"App complète : python app.py <dossier> -> ouvre le navigateur sur le wiki."},
+  {day:24,phase:3,title:"Projet — Publication",tags:["project","review"],obj:"README, packaging, setup.py/pyproject.toml, tests finaux, tag Git.",del:"Repo propre, badge coverage, démo fonctionnelle, documentation finale."},
+];
+
+const tagMap={wiki:"tag-wiki",code:"tag-code",review:"tag-review",project:"tag-project"};
+const tagLabel={wiki:"Wiki",code:"Code",review:"Review",project:"Projet"};
+
+function buildBoard(){
+  const board=document.getElementById('board');
+  phases.forEach((ph,pi)=>{
+    const col=document.createElement('div');
+    col.className='col';
+    const pCards=cards.filter(c=>c.phase===pi);
+    col.innerHTML=`<div class="col-header"><span><span class="phase-dot dot-${ph.dot}"></span>${ph.label}</span><span class="count">${pCards.length}</span></div>`;
+    pCards.forEach(c=>{
+      const div=document.createElement('div');
+      div.className='card';
+      div.innerHTML=`<div class="card-day" style="color:var(--color-text-tertiary)">Jour ${c.day}</div>
+        <div class="card-title">${c.title}</div>
+        <div class="card-tags">${c.tags.map(t=>`<span class="tag ${tagMap[t]}">${tagLabel[t]}</span>`).join('')}</div>`;
+      div.onclick=()=>openDetail(c,ph);
+      col.appendChild(div);
+    });
+    board.appendChild(col);
+  });
+}
+
+function openDetail(c,ph){
+  document.getElementById('d-title').textContent=`Jour ${c.day} — ${c.title}`;
+  document.getElementById('d-meta').textContent=`${ph.label} · ${c.tags.map(t=>tagLabel[t]).join(', ')}`;
+  document.getElementById('d-obj').textContent=c.obj;
+  document.getElementById('d-del').textContent=c.del;
+  document.getElementById('detail').className='detail-panel open';
+}
+function closeDetail(){document.getElementById('detail').className='detail-panel';}
+
+buildBoard();
+</script>
+
+
+  
+</body>
+</html>
