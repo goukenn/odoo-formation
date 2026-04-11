@@ -1,5 +1,5 @@
 # exercise: Rock - Paper - Scissors
-# Write a program that allow two plater to play "Rock - Paper - Scissors".
+# Write a program that allow two player to play "Rock - Paper - Scissors".
 # each player enter their name, and then the game begin
 # each player takes their turn,n and the program determines the winner of the round and awards 1 point.
 # - rock beats scissors
@@ -7,6 +7,7 @@
 # - paper beats rock
 # the first player to reach 3 points wins. A tie scrores no points
 from random import randint 
+
 player1 = { "name": '', "score": 0}
 player2 = { "name": '', "score": 0}
 

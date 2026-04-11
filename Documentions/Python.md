@@ -421,3 +421,29 @@
 
 
 [build-in-function-documentation](https://docs.python.org/3/library/functions.html#callable)
+
+
+create a custom module
+
+module name must be in directory _(- not allowed)
+
+
+run as module
+```bash
+python -m folder.main 
+```
+
+- install local a module
+```bash
+pip install -e .
+```
+
+**Note:**
+Create a good package :
+in your main create a folder directly in the root dir. but is recommanded to use "src/" to create your package introduction 
+
+to make it executable as a module you must provide a `\__main__.py` file in that folder 
+
+
+**Note:**
+__python__.py file tel python that this is a package 

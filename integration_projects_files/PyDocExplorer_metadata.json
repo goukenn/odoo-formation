@@ -1,0 +1,45 @@
+{
+  "project": "PyDocExplorer",
+  "subtitle": "Extracteur de documentation de modules Python avec interface web",
+  "author": "C.A.D. BONDJE DOUE",
+  "date": "2026-04-10",
+  "version": "1.0.0",
+  "language": "Python",
+  "min_python_version": "3.10",
+  "type": "projet_integration",
+  "tags": [
+    "python",
+    "POO",
+    "SQLite",
+    "algorithmique",
+    "documentation",
+    "web",
+    "stdlib"
+  ],
+  "objectives": [
+    "Programmation orientée objet",
+    "Algorithmique (AST, parcours récursif, scoring)",
+    "SQL avec SQLite",
+    "Structuration et architecture du code",
+    "Gestion des données (JSON cache, CRUD)",
+    "Documentation minimale (docstrings)",
+    "Interface web en Python pur"
+  ],
+  "dependencies": "stdlib only",
+  "entry_point": "main.py",
+  "outputs": [
+    "Interface web locale (http://localhost:8080)",
+    "Base SQLite (docs.db)",
+    "Cache JSON (docs_cache/)",
+    "Export Markdown optionnel"
+  ],
+  "phases": [
+    { "phase": 1, "title": "Core", "duration": "semaine 1-2" },
+    { "phase": 2, "title": "Fonctionnalites", "duration": "semaine 3" },
+    { "phase": 3, "title": "Qualite", "duration": "semaine 4" }
+  ],
+  "files": {
+    "main_doc": "PyDocExplorer_project.md",
+    "metadata": "PyDocExplorer_metadata.json"
+  }
+}
