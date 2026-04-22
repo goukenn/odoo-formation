@@ -1,7 +1,7 @@
 # take a value from an user and show. the type
 
 
-# data = input('please give a value _ ')
+# data = input('please give a value ')
 # print('type of value : ', type(data), )
 
 # operation order : 42
@@ -14,4 +14,4 @@ print(not x > 3 and True)
 print( x > 3 and True) 
 
 v_str = "Hello world"
-# str[from:to:ste]
+# str[from:to:ste]+

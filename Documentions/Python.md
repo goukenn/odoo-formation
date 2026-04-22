@@ -425,7 +425,7 @@
 
 create a custom module
 
-module name must be in directory _(- not allowed)
+module name must be in packed in a directory (- not allowed)
 
 
 run as module
@@ -447,3 +447,204 @@ to make it executable as a module you must provide a `\__main__.py` file in that
 
 **Note:**
 __python__.py file tel python that this is a package 
+
+
+# class 
+
+create a class with the class name
+syntax:
+```python
+class MyClass[(parentClass)]:
+	# static attributesn here ": str " is annoations since 3.14
+	sm_instance : str = "this is a static" # shared accross al device 
+	def __init__(self){
+		self.name = 'this is an instance attribute'
+	}
+	@staticmethod # this is an **decorator** annotation 
+	def Shared():
+		print('call shared')
+
+	@classmethod # this define a class method and cls refer to class itself
+	def StaticCall(cls):
+		print(cls)
+
+```
+
+in python every class member are attribute. attribute can be def (method) or property
+static(for class ) or instance property
+
+
+## Decorators
+
+### function decorator 
+- function that receive a `func` as argument
+
+### class decoration 
+
+- function that receive a `cls` as argument 
+
+
+
+## Resolving packages
+
+
+Python variable 
+
+PYTHONPATH | change the package resolutions  
+
+
+### FAQS
+
+1. isolate python execution in a docker 
+```bash
+docker run --rm  -m 100m --cpus="0.5" --name temp_python python:3.14 python --version
+```
+
+2. execute subprocess
+```python
+# import subprocess
+import subprocess
+# then
+subprocess.run(
+	["python3", "-c", code],
+	capture_output=True,
+	text=True,
+	timeout=2
+)
+```
+
+3. eval code in restricted mode (but still attackable)
+
+```php
+eval(code, {'__builtsin__':{}})
+```
+
+attack with
+```php
+().__class__.__base__[0].__subclasses__()
+```
+
+
+## Flask
+## jinja2 
+{{ variable }}          -> affichage d'une variable
+{% if condition %}      -> bloc conditionnel
+{% for item in list %}  -> boucle
+{% block nom %}         -> bloc extensible (héritage)
+{% extends "base.html" %} -> héritage de template
+{# commentaire #}       -> commentaire (non rendu)
+
+
+## use of regex in re
+
+```python
+import os 
+import re
+
+d = re.match('^APP_', 'APP_SECRET') 
+d = { x: os.getenv(x, None) for x in os.environ.keys() if not None == re.match('^APP_', str(x))}
+print(d) 
+```
+
+
+# How to get args pass to a pyton script 
+
+choose between sys.argv or argparse 
+
+```python
+import argparse
+
+parser = argparse.ArgumentParser(description='description of the command line')
+parser.add_argument('name', help='help message' )
+parser.add_argument('--name', type=int, help="your age")
+```
+
+attribute in python are 
+
+**Note**
+like php, python instance are open objects by default 
+in a class `__slots__` is used to restrict a class definition with list. so when affected, the instance of the class will only allow properties define in that list 
+
+
+use `setattr` global method to set attribute dynamically 
+use `delattr` global method to remove attribute dynamically 
+
+we can attach a lambda expression to a class   
+
+use `types.MethodType` to attach a def to an instance of object 
+
+in class we also have a hook syntax that allow definition of attribute 
+
+`__setattr__`
+```py
+class Info:
+	def __setattr__(self, name, value):
+		""" to set custom attribute """
+		pass 
+```
+
+**Note**
+in method declaration `/` python tell previous parameter must be consider as positional parameter .
+```python
+def info(x: int, y: int, /):
+	pass
+```
+
+
+`__dict__` dictionary that store attribute for a class not method.
+
+## embeded python module package
+name |	description
+flask | inner web server
+
+## Some python package to install 
+
+name	| 	description
+NumPy	| help create matrix definition to use with `@` operator 
+
+
+
+# Web server development user Flask
+
+
+## using cookies
+`flask` define a `make_response` the response  is where to set cookies 
+
+example:
+```python
+@app.get('/get')
+def get_cookies():
+    response = make_response('setting cookies')
+    response.set_cookie('__igk_python_app', cookie_gen())
+    return response
+
+```
+to retrieve a cookie use the `flask.request`
+
+
+using "session "
+
+
+we can reload module loading with `importlib.reload`
+
+
+to avoid nameping collision please do not load name your module with the name you are suppose to import .
+python name collision concept
+
+
+Path override the "/" operator help full path combination 
+
+This behavior is called:
+
+Operator overloading of the division operator (/) via __truediv__
+
+
+When pattern is rare in Python it is often considered `unpythonic`.
+
+
+
+the `__new__`
+
+the `__repr__`
+
+`!r`
