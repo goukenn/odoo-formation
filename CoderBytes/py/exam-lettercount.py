@@ -1,0 +1,2 @@
+def lettercount():
+    pass

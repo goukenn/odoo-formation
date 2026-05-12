@@ -1,0 +1,3 @@
+def changinSequences($arr):
+                     
+    pass

@@ -1,0 +1,2 @@
+def simplesymbol():
+    pass

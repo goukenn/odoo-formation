@@ -4,7 +4,5 @@ def update(*a):
     a = 8
 
 a = (12,65)
-
 update(a)
-
 print(a)

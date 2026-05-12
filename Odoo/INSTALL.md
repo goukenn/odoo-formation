@@ -74,7 +74,7 @@ $ pip install -r requirements.txt
 
  
 # initialize the database 
-$ sudo -u posgres psql
+$ sudo -u postgres psql
 ~ create database odoo_dev;
 
 # first run odoo server

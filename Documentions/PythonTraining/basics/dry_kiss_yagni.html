@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRY / KISS / YAGNI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0f14;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 16px;
+  }
+
+  .slide {
+    width: 100%;
+    max-width: 980px;
+    background: #13151c;
+    border: 1px solid #2d3147;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 32px 64px rgba(0,0,0,0.55);
+  }
+
+  /* header */
+  .slide-header {
+    padding: 18px 28px 14px;
+    border-bottom: 1px solid #1e2130;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .day-label {
+    font-size: 11px;
+    color: #4a5568;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    margin-bottom: 3px;
+  }
+  .slide-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: #f7fafc;
+    letter-spacing: -0.02em;
+  }
+  .tagline {
+    font-size: 12.5px;
+    color: #718096;
+    font-style: italic;
+    max-width: 420px;
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  /* table wrapper */
+  .table-wrap { padding: 22px 28px 20px; }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  /* column headers */
+  thead tr th {
+    padding: 9px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #4a5568;
+    background: #0e1018;
+    border-top: 1px solid #1e2130;
+    border-bottom: 1px solid #1e2130;
+  }
+  thead tr th:first-child { border-left: 1px solid #1e2130; border-radius: 8px 0 0 0; }
+  thead tr th:last-child  { border-right: 1px solid #1e2130; border-radius: 0 8px 0 0; text-align: center; }
+  thead tr th:not(:first-child):not(:last-child) { border-left: 1px solid #1e2130; }
+
+  /* body rows */
+  tbody tr td {
+    padding: 0;
+    border-bottom: 1px solid #1e2130;
+    vertical-align: stretch;
+  }
+  tbody tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  tbody tr:last-child td:last-child  { border-radius: 0 0 8px 0; }
+
+  tbody tr td:first-child { border-left: 1px solid #1e2130; }
+  tbody tr td:last-child  { border-right: 1px solid #1e2130; }
+  tbody tr td:not(:first-child) { border-left: 1px solid #1e2130; }
+
+  /* principle pill column */
+  .pill-cell {
+    text-align: center;
+    padding: 0 14px;
+    white-space: nowrap;
+  }
+  .pill {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 16px;
+  }
+  .pill-name {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+  }
+  .pill-full {
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  /* code cells */
+  .code-cell {
+    padding: 14px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .cell-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  /* violation cell */
+  .violation-cell { background: #0f0b0b; }
+  .violation-cell .label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #e53e3e;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .violation-cell code { color: #fc8181; }
+  .violation-cell .sub { color: #4a5568; font-size: 11px; font-family: 'Inter', sans-serif; margin-top: 3px; }
+
+  /* fix cell */
+  .fix-cell { background: #0a0f0b; }
+  .fix-cell .label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #34d399;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .fix-cell code { color: #6ee7b7; }
+  .fix-cell .sub { color: #4a5568; font-size: 11px; font-family: 'Inter', sans-serif; margin-top: 3px; }
+
+  /* syntax */
+  .kw   { color: #c084fc; }
+  .fn   { color: #60a5fa; }
+  .cls  { color: #34d399; }
+  .str  { color: #fbbf24; }
+  .cmt  { color: #4a5568; font-style: italic; }
+  .num  { color: #f87171; }
+
+  /* DRY row color */
+  .dry .pill-name { color: #60a5fa; }
+  .dry .pill-full { color: #60a5fa; }
+  .dry-pill-col   { background: #0a0d14; border-right: 3px solid #60a5fa33 !important; }
+
+  /* KISS row color */
+  .kiss .pill-name { color: #a78bfa; }
+  .kiss .pill-full { color: #a78bfa; }
+  .kiss-pill-col   { background: #0c0a14; border-right: 3px solid #a78bfa33 !important; }
+
+  /* YAGNI row color */
+  .yagni .pill-name { color: #f59e0b; }
+  .yagni .pill-full { color: #f59e0b; }
+  .yagni-pill-col   { background: #100d05; border-right: 3px solid #f59e0b33 !important; }
+
+  /* takeaway strip */
+  .takeaways {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-top: 1px solid #1e2130;
+  }
+  .takeaway {
+    padding: 13px 18px;
+    border-right: 1px solid #1e2130;
+  }
+  .takeaway:last-child { border-right: none; }
+  .t-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .t-text {
+    font-size: 12px;
+    color: #718096;
+    line-height: 1.5;
+    font-style: italic;
+  }
+  .t-text strong { font-style: normal; color: #a0aec0; }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <div class="slide-header">
+    <div>
+      <div class="day-label">Day 4 — Clean Code</div>
+      <div class="slide-title">DRY &nbsp;·&nbsp; KISS &nbsp;·&nbsp; YAGNI</div>
+    </div>
+    <div class="tagline">"These aren't rules — they're instincts.<br>You develop them by noticing the same mistakes repeatedly."</div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:14%">Principle</th>
+          <th style="width:43%">❌ &nbsp;Violation</th>
+          <th style="width:43%">✅ &nbsp;Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- DRY ROW -->
+        <tr>
+          <td class="pill-cell dry-pill-col">
+            <div class="pill dry">
+              <span class="pill-name">DRY</span>
+              <span class="pill-full">Don't Repeat Yourself</span>
+            </div>
+          </td>
+          <td class="code-cell violation-cell">
+            <div class="cell-inner">
+              <div class="label">⚠ duplicated logic</div>
+              <code><span class="kw">def</span> <span class="fn">fine_for_book</span>(days):
+  <span class="kw">return</span> <span class="num">0.20</span> * days
+
+<span class="kw">def</span> <span class="fn">fine_for_dvd</span>(days):
+  <span class="kw">return</span> <span class="num">0.20</span> * days  <span class="cmt"># copy-paste</span></code>
+              <div class="sub">Same formula in 3 places → change the rate, hunt every copy.</div>
+            </div>
+          </td>
+          <td class="code-cell fix-cell">
+            <div class="cell-inner">
+              <div class="label">✓ single source of truth</div>
+              <code><span class="kw">def</span> <span class="fn">calculate_fine</span>(item):
+  <span class="kw">return</span> item.daily_fine * item.overdue_days
+
+<span class="cmt"># one place to change, every caller benefits</span></code>
+              <div class="sub">The rate lives on the item. The formula lives once.</div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- KISS ROW -->
+        <tr>
+          <td class="pill-cell kiss-pill-col">
+            <div class="pill kiss">
+              <span class="pill-name">KISS</span>
+              <span class="pill-full">Keep It Simple</span>
+            </div>
+          </td>
+          <td class="code-cell violation-cell">
+            <div class="cell-inner">
+              <div class="label">⚠ overcomplicated</div>
+              <code><span class="kw">class</span> <span class="cls">TitleSorter</span>:
+  <span class="kw">def</span> <span class="fn">__init__</span>(self, strategy,
+               locale, reverse):
+    ...  <span class="cmt"># 60 lines for a sort</span></code>
+              <div class="sub">A custom sort engine for 12 book titles.</div>
+            </div>
+          </td>
+          <td class="code-cell fix-cell">
+            <div class="cell-inner">
+              <div class="label">✓ simplest thing that works</div>
+              <code>items.sort(<span class="fn">key</span>=<span class="kw">lambda</span> i: i.title)
+
+<span class="cmt"># could a newcomer read this in 30 s?</span>
+<span class="cmt"># yes → ship it</span></code>
+              <div class="sub">The standard library already solved this.</div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- YAGNI ROW -->
+        <tr>
+          <td class="pill-cell yagni-pill-col">
+            <div class="pill yagni">
+              <span class="pill-name">YAGNI</span>
+              <span class="pill-full">You Aren't Gonna Need It</span>
+            </div>
+          </td>
+          <td class="code-cell violation-cell">
+            <div class="cell-inner">
+              <div class="label">⚠ speculative code</div>
+              <code><span class="kw">def</span> <span class="fn">export_to_xml</span>(self):
+  ...  <span class="cmt"># "just in case"</span>
+
+<span class="kw">def</span> <span class="fn">export_to_yaml</span>(self):
+  ...  <span class="cmt"># never been called</span></code>
+              <div class="sub">No ticket, no user, no requirement. Just future-guessing.</div>
+            </div>
+          </td>
+          <td class="code-cell fix-cell">
+            <div class="cell-inner">
+              <div class="label">✓ build when needed</div>
+              <code><span class="kw">def</span> <span class="fn">export_to_csv</span>(self):
+  ...  <span class="cmt"># real ticket, real user</span>
+
+<span class="cmt"># xml/yaml: add them when asked</span></code>
+              <div class="sub">Every line of unused code is a line to maintain, debug, and explain.</div>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- takeaway strip -->
+  <div class="takeaways">
+    <div class="takeaway">
+      <div class="t-label" style="color:#60a5fa">DRY — ask yourself</div>
+      <div class="t-text">If I change this in one place, <strong>does it break somewhere else?</strong></div>
+    </div>
+    <div class="takeaway">
+      <div class="t-label" style="color:#a78bfa">KISS — ask yourself</div>
+      <div class="t-text">Could a newcomer <strong>understand this in 30 seconds?</strong></div>
+    </div>
+    <div class="takeaway">
+      <div class="t-label" style="color:#f59e0b">YAGNI — ask yourself</div>
+      <div class="t-text">Is there <strong>a real ticket for this,</strong> or am I guessing the future?</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

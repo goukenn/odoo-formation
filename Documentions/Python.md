@@ -46,6 +46,14 @@
 ## Syntaxe
 
 ### Mots réserver
+```bash
+python -c "import keyword; print(keyword.kwl)
+```
+
+```bash
+['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']
+```
+
 - if
 - and
 - or
@@ -648,3 +656,8 @@ the `__new__`
 the `__repr__`
 
 `!r`
+
+
+## learning documetation
+
+[some questions](https://www.lets-code.co.in/interview/pythoninterviewquestions/)
